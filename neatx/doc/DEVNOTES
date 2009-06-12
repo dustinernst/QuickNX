@@ -1,0 +1,73 @@
+Developer notes
+===============
+
+Build dependencies
+------------------
+
+Most dependencies from INSTALL, plus:
+ - rst2html from Docutils
+   http://docutils.sourceforge.net/
+
+
+Configuring for development
+---------------------------
+
+sh autogen.sh && \
+./configure --enable-maintainer-mode \
+  --prefix=/usr/local --sysconfdir=/etc --localstatedir=/var
+
+
+Release process
+---------------
+
+Prerequisites
+~~~~~~~~~~~~~
+
+- Code conforms to the style guide (this should be checked during CL reviews)
+- Unittests (make check, make distcheck) from a pristine checkout don't fail:
+
+  TMPDIR=`mktemp -d` && (
+    echo $TMPDIR
+    cd $TMPDIR
+    svn co http://neatx.googlecode.com/svn/branches/neatx/neatx-$VERSION/ . && \
+    ./autogen.sh && \
+    ./configure && \
+    make distcheck || echo "Autobuild failed"
+  )
+  echo "Please remove the temporary directory $TMPDIR"
+
+- NEWS file is updated
+- Included documentation, readme files and comments reflect the version to be
+  released
+
+
+Steps
+~~~~~
+
+- If not done already, update configure.ac with the new version
+- Run "make distcheck"
+- Create the release branch (only if it's a major/minor release, not for
+  revisions):
+
+  ./svnutil branch neatx $VERSION $REVIEWER
+
+- Create the release tag:
+
+  ./svnutil tag neatx branch $VERSION $REVIEWER
+
+- Do a clean checkout from the tag and create the archive:
+
+  TMPDIR=`mktemp -d` && (
+    echo $TMPDIR
+    cd $TMPDIR
+    svn co http://neatx.googlecode.com/svn/tags/neatx/neatx-$VERSION/ . && \
+    ./autogen.sh && \
+    ./configure && \
+    make distcheck && \
+    fakeroot make dist && \
+    tar tzvf neatx-$VERSION.tar.gz
+  )
+
+- Upload the .tar.gz archive to the project site
+- Remove the temporary directory used for creating the archive
+- Send release announcement

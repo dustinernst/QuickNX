@@ -1,0 +1,8 @@
+# This is an example configuration file for Neatx. Comments start with the hash
+# sign (#).
+
+[global]
+# loglevel = debug
+# start-console-command = /usr/bin/xterm
+# start-kde-command = /etc/X11/Xsession startkde
+# start-gnome-command = /etc/X11/Xsession gnome-session

@@ -1,0 +1,16 @@
+Last update: 2009-04-07
+
+Login phase
+- nxserver-login-wrapper (user=nx)
+  - nxserver-login (user=nx)
+    - su/ssh (user=$client)
+      - goto runtime phase
+    - fdcopy (user=nx)
+
+Runtime phase
+- nxserver (user=$client)
+  - netcat
+
+- nxnode (started as daemon by nxserver, listening on socket)
+  - nxagent
+  - KDE/Gnome/etc.

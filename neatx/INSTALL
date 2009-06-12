@@ -1,0 +1,19 @@
+Software Requirements
+=====================
+
+Before installing, please verify that you have the following programs
+installed:
+  - OpenSSH
+    http://www.openssh.com/portable.html
+  - Python 2.4 (or a higher 2.x version)
+    http://www.python.org/
+  - Pexpect
+    http://pexpect.sourceforge.net/
+  - simplejson Python module
+    http://www.undefined.org/python/#simplejson
+  - PyGTK+ 2.12 or higher
+    http://www.pygtk.org/
+  - PyGObject 2.12 or higher
+    http://www.pygtk.org/
+
+For building from source, you also need tar, gzip or bzip2 and make.

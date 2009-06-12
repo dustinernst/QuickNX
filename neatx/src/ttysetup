@@ -1,0 +1,4 @@
+#!/bin/bash
+
+stty raw -echo
+exec "$@"
