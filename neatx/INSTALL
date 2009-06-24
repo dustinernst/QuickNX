@@ -15,5 +15,27 @@ installed:
     http://www.pygtk.org/
   - PyGObject 2.12 or higher
     http://www.pygtk.org/
+  - GNU C Compiler
+    http://gcc.gnu.org/
+  - GNU Autoconf
+    http://www.gnu.org/software/autoconf/
+  - GNU Automake
+    http://www.gnu.org/software/automake/
+  - Python Docutils
+    http://docutils.sourceforge.net/
 
-For building from source, you also need tar, gzip or bzip2 and make.
+To build, run the following as a normal user:
+  - ./autogen.sh
+  - ./configure # You probably want to supply --prefix etc here. see
+                # ./configure --help for details.
+  - make
+
+To install, run this as root:
+  - make install
+
+To finish setup (this assumes you've installed to the standard locations):
+  - Create a 'nx' user with the shell set to the path to
+    /usr/local/lib/neatx/nxserver-login-wrapper
+  - Copy /usr/local/share/neatx/authorized_keys.nomachine to
+    ~nx/.ssh/authorized_keys
+  - chmod 600 ~nx/.ssh/authorized_keys
