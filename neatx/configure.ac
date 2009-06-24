@@ -1,7 +1,7 @@
 # Configure script for Neatx
 m4_define([version_major], [0])
 m4_define([version_minor], [3])
-m4_define([version_revision], [0])
+m4_define([version_revision], [1])
 m4_define([version_suffix], [])
 m4_define([version_full],
           m4_format([%d.%d.%d%s],
