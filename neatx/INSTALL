@@ -23,6 +23,16 @@ installed:
     http://www.gnu.org/software/automake/
   - Python Docutils
     http://docutils.sourceforge.net/
+  - NX Agent 3.3.0
+    http://www.nomachine.com/sources
+
+On debian/ubuntu, these (except NX Agent) can be satisfied using:
+  sudo apt-get install openssh-server python python-pexpect python-simplejson \
+       python-gtk2 python-gobject gcc autoconf automake python-docutils
+
+Nx Agent is not currently included in debian or ubuntu. Ubuntu packages can be
+located here:
+  https://launchpad.net/~freenx-team/+archive/ppa
 
 To build, run the following as a normal user:
   - ./autogen.sh
@@ -39,3 +49,5 @@ To finish setup (this assumes you've installed to the standard locations):
   - Copy /usr/local/share/neatx/authorized_keys.nomachine to
     ~nx/.ssh/authorized_keys
   - chmod 600 ~nx/.ssh/authorized_keys
+  - Install the example config file:
+    cp /usr/local/share/doc/neatx/neatx.conf.example /usr/local/etc/neatx.conf
