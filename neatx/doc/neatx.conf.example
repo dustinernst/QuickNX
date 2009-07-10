@@ -2,7 +2,8 @@
 # sign (#).
 
 [global]
-# loglevel = debug
+loglevel = debug
+nx-protocol-version = 3.3.0
 # start-console-command = /usr/bin/xterm
 # start-kde-command = /etc/X11/Xsession startkde
 # start-gnome-command = /etc/X11/Xsession gnome-session
