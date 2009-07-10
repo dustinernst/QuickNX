@@ -223,6 +223,7 @@ distcheck-hook:
 install-exec-local:
 	@mkdir_p@ "$(DESTDIR)${localstatedir}/lib/neatx" \
 	  "$(DESTDIR)${localstatedir}/lib/neatx/sessions"
+	@chmod 1777 "$(DESTDIR)${localstatedir}/lib/neatx/sessions"
 
 stamp-directories: Makefile
 	@mkdir_p@ $(DIRS)
