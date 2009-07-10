@@ -113,8 +113,10 @@ class Config(object):
     self.auth_ssh_port = _GetOption(cfg, section, VAR_AUTH_SSH_PORT,
                                     _GetSshPort())
 
-    self._nx_protocol_version = _GetOption(cfg, section,
-                                           VAR_NX_PROTOCOL_VERSION, None)
+    ver_string = _GetOption(cfg, section, VAR_NX_PROTOCOL_VERSION, None)
+    self._nx_protocol_version = \
+      utils.ParseVersion(ver_string, constants.NXAGENT_VERSION_SEP,
+                         constants.PROTOCOL_VERSION_DIGITS)
 
   def _GetNxProtocolVersion(self):
     """Returns appropriate protocol version.
