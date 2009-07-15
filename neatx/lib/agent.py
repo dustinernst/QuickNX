@@ -68,7 +68,8 @@ _AGENT_PID_RE = re.compile(r"^Info:\s+Agent\s+running\s+with\s+pid\s+"
 _GENERAL_ERROR_RE = re.compile(r"^Error:\s+(?P<error>.*)$")
 _GENERAL_WARNING_RE = re.compile(r"^Warning:\s+(?P<warning>.*)$")
 _GEOMETRY_RE = re.compile(r"^Info:\s+Screen\s+\[0\]\s+resized\s+to\s+"
-                          r"geometry\s+\[(?P<geometry>.*)]\.$")
+                          r"geometry\s+\[(?P<geometry>[^\]]+)\]"
+                          r"( fullscreen \[\d\])?\.$")
 
 
 class UserApplication(daemon.Program):
