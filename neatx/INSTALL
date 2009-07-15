@@ -21,16 +21,21 @@ installed:
     http://www.gnu.org/software/autoconf/
   - GNU Automake
     http://www.gnu.org/software/automake/
+  - GNU Make
+    http://www.gnu.org/software/make/
   - Python Docutils
     http://docutils.sourceforge.net/
   - NX Agent 3.3.0
     http://www.nomachine.com/sources
   - Netcat
     http://netcat.sourceforge.net/
+  - NXClient (or equivalent, only NoMachine's client has been tested though)
+    http://www.nomachine.com/select-package-client.php
 
 On debian/ubuntu, these (except NX Agent) can be satisfied using:
-  sudo apt-get install openssh-server python python-pexpect python-simplejson \
-       python-gtk2 python-gobject gcc autoconf automake python-docutils netcat
+  sudo apt-get install make openssh-server python python-pexpect \
+       python-simplejson python-gtk2 python-gobject gcc autoconf automake \
+       python-docutils netcat
 
 Nx Agent is not currently included in debian or ubuntu. Ubuntu packages can be
 located here:
@@ -49,10 +54,10 @@ To finish setup (this assumes you've installed to the standard locations):
   - Create a 'nx' user with the shell set to the path to
     /usr/local/lib/neatx/nxserver-login-wrapper
     Debian/ubuntu example:
-      mkdir /usr/local/lib/neatx/home
-      useradd --system -d /usr/local/lib/neatx/home -s \
+      install -d -o nx /usr/local/var/lib/neatx/home
+      useradd --system -d /usr/local/var/lib/neatx/home -s \
       /usr/local/lib/neatx/nxserver-login-wrapper nx
   - Install authorized_keys.nomachine:
-    install -D -m 600 -o nx -g root /usr/local/share/neatx/authorized_keys.nomachine ~nx/.ssh/authorized_keys
+    install -D -m 600 -o nx /usr/local/share/neatx/authorized_keys.nomachine ~nx/.ssh/authorized_keys
   - Install the example config file:
     cp /usr/local/share/doc/neatx/neatx.conf.example /usr/local/etc/neatx.conf
