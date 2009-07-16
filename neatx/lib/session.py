@@ -24,11 +24,16 @@
 
 import errno
 import logging
-import md5
 import os
 import os.path
 import random
 import time
+
+# md5 module is deprecated in python2.6, hashlib is the replacement
+try:
+  import hashlib as md5
+except ImportError:
+  import md5
 
 from neatx import constants
 from neatx import serializer
