@@ -61,7 +61,7 @@ class NxQuietQuitServer(NxQuitServer):
 class NxProtocolError(Exception):
   def __init__(self, code, message, fatal=False):
     self.code = code
-    self.message = message
+    self.msg = message
     self.fatal = fatal
 
 
@@ -145,7 +145,7 @@ class NxServerBase(object):
             self._HandleLine(line)
 
         except NxProtocolError, err:
-          self.Write(err.code, message=err.message)
+          self.Write(err.code, message=err.msg)
           if err.fatal:
             raise NxQuitServer()
 
