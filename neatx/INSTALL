@@ -31,11 +31,13 @@ installed:
     http://netcat.sourceforge.net/
   - NXClient (or equivalent, only NoMachine's client has been tested though)
     http://www.nomachine.com/select-package-client.php
+  - Xauth & Xrdb
+    http://xorg.freedesktop.org/releases/individual/app/
 
 On debian/ubuntu, these (except NX Agent) can be satisfied using:
   sudo apt-get install make openssh-server python python-pexpect \
        python-simplejson python-gtk2 python-gobject gcc autoconf automake \
-       python-docutils netcat
+       python-docutils netcat xauth x11-xserver-utils
 
 Nx Agent is not currently included in debian or ubuntu. Ubuntu packages can be
 located here:
