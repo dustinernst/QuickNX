@@ -25,7 +25,7 @@
 from neatx import _autoconf
 
 
-NXDIR = "/usr/lib/nx"
+NXDIR = "/usr/bin"
 
 SYSLOG_ADDRESS = "/dev/log"
 BASH = "/bin/bash"
