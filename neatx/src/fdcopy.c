@@ -314,7 +314,7 @@ int main(int argc, char **argv)
   int ret;
   int i;
 
-  progname = basename(strdup(argv[0]));
+  progname = strdup(basename(strdup(argv[0])));
 
   if (argc < 2)
     usage();
