@@ -113,31 +113,8 @@ class Config(object):
     self.auth_ssh_port = _GetOption(cfg, section, VAR_AUTH_SSH_PORT,
                                     _GetSshPort())
 
-    ver_string = _GetOption(cfg, section, VAR_NX_PROTOCOL_VERSION, None)
-    self._nx_protocol_version = \
+    ver_string = _GetOption(cfg, section, VAR_NX_PROTOCOL_VERSION,
+                            constants.DEFAULT_NX_PROTOCOL_VERSION)
+    self.nx_protocol_version = \
       utils.ParseVersion(ver_string, constants.NXAGENT_VERSION_SEP,
                          constants.PROTOCOL_VERSION_DIGITS)
-
-  def _GetNxProtocolVersion(self):
-    """Returns appropriate protocol version.
-
-    If _nx_protocol_version is not present it extracts version of the nxagent
-    using the external command.
-    It also sets _nx_protocol_version attribute, so we don't need
-    to run the external command next time.
-
-    """
-    if not self._nx_protocol_version:
-      version_extract = os.popen(constants.NXAGENT_VERSION_COMMAND, 'r')
-      try:
-        version = version_extract.readline().strip()
-      finally:
-        version_extract.close()
-
-      self._nx_protocol_version = \
-        utils.ParseVersion(version, constants.NXAGENT_VERSION_SEP,
-                           constants.PROTOCOL_VERSION_DIGITS)
-
-    return self._nx_protocol_version
-
-  nx_protocol_version = property(fget=_GetNxProtocolVersion)

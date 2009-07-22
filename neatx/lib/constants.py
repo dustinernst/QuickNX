@@ -51,9 +51,6 @@ NXAGENT_PKGNAME = "nxagent"
 FDCOPY = _autoconf.PKGLIBDIR + "/fdcopy"
 TTYSETUP = _autoconf.PKGLIBDIR + "/ttysetup"
 
-# Extract nxagent version using the following command.
-NXAGENT_VERSION_COMMAND = ("dpkg-query -W --showformat='${Version}' %s" %
-                           NXAGENT_PKGNAME)
 NXAGENT_VERSION_SEP = ".-~"
 
 PROTOCOL_VERSION_DIGITS = [2, 2, 4]
@@ -74,6 +71,7 @@ DISPLAY_CHECK_PATHS = frozenset([
 DEFAULT_SUBSCRIPTION = "GPL"
 DEFAULT_SSH_PORT = 22
 DEFAULT_APP_UMASK = 0077
+DEFAULT_NX_PROTOCOL_VERSION = "3.3.0"
 
 # Taken from nxcomp/Misc.cpp
 NX_PROXY_PORT_OFFSET = 4000
