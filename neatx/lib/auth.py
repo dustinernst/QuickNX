@@ -182,12 +182,12 @@ class SuAuth(_ExpectAuthBase):
   def GetCommand(self, username, args):
     cmd = " && ".join([
       # Change to home directory
-      "cd ~",
+      "cd",
 
       # Run command
       utils.ShellQuoteArgs(args)
       ])
-    return [constants.SU, "-s", constants.BASH, "-c", cmd, username]
+    return [constants.SU, username, "-c", cmd]
 
   def GetPasswordPrompt(self):
     return re.compile(r"^Password:\s*", re.I)
