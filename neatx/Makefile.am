@@ -197,7 +197,7 @@ $(PYTHON_BOOTSTRAP): Makefile stamp-directories
 $(LOG_WRAPPER): Makefile stamp-directories $(GEN_LOG_WRAPPER)
 	set -e; \
 	progname=`basename $@ | sed -e 's/-wrapper//'`; \
-	$(GEN_LOG_WRAPPER) "$(pkglibdir)/$$progname" > $@ || rm -f $@
+	$(GEN_LOG_WRAPPER) "$(pkglibdir)/$$progname" "$(DESTDIR)$(pythondir)" > $@ || rm -f $@
 	chmod u+x $@
 
 # We need to create symlinks because "make distcheck" will not install Python
