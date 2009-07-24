@@ -56,8 +56,7 @@ To finish setup (this assumes you've installed to the standard locations):
   - Create a 'nx' user with the shell set to the path to
     /usr/local/lib/neatx/nxserver-login-wrapper
     Debian/ubuntu example:
-      install -d -o nx /usr/local/var/lib/neatx/home
-      useradd --system -d /usr/local/var/lib/neatx/home -s \
+      useradd --system -m -d /usr/local/var/lib/neatx/home -s \
       /usr/local/lib/neatx/nxserver-login-wrapper nx
   - Install authorized_keys.nomachine:
     install -D -m 600 -o nx /usr/local/share/neatx/authorized_keys.nomachine ~nx/.ssh/authorized_keys
