@@ -511,6 +511,7 @@ class Program(gobject.GObject, object):
                           standard_error=True,
                           **kwargs)
 
+    logging.info("Child pid %r", pid)
     self.__pid = pid
 
     self.stdin.Attach(stdin_fd)
