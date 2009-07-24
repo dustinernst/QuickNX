@@ -47,7 +47,6 @@ NXNODE_WRAPPER = _autoconf.PKGLIBDIR + "/nxnode-wrapper"
 NXNC = _autoconf.PKGLIBDIR + "/nxnc"
 NXDIALOG = _autoconf.PKGLIBDIR + "/nxdialog"
 NXAGENT = NXDIR + "/nxagent"
-NXAGENT_PKGNAME = "nxagent"
 FDCOPY = _autoconf.PKGLIBDIR + "/fdcopy"
 TTYSETUP = _autoconf.PKGLIBDIR + "/ttysetup"
 
