@@ -23,8 +23,8 @@
 
 
 import ConfigParser
-import socket
 import os
+import socket
 
 from neatx import constants
 from neatx import utils
@@ -38,6 +38,15 @@ VAR_START_KDE_COMMAND = "start-kde-command"
 VAR_START_GNOME_COMMAND = "start-gnome-command"
 VAR_START_CONSOLE_COMMAND = "start-console-command"
 VAR_NX_PROTOCOL_VERSION = "nx-protocol-version"
+VAR_BASH = "bash-path"
+VAR_NETCAT = "netcat-path"
+VAR_XRDB = "xrdb-path"
+VAR_SU = "su-path"
+VAR_SSH = "ssh-path"
+VAR_XAUTH = "xauth-path"
+VAR_XSESSION = "xsession-path"
+VAR_NXAGENT = "nxagent-path"
+VAR_USE_XSESSION = "use-xsession"
 
 _LOGLEVEL_DEBUG = "debug"
 
@@ -49,11 +58,15 @@ def _ReadConfig(filename):
   cfg.read(filename)
   return cfg
 
+def __GetDefault(func):
+  def wrapped(cfg, section, name, default):
+    if cfg.has_option(section, name):
+      return func(cfg, section, name)
+    return default
+  return wrapped
 
-def _GetOption(cfg, section, name, default):
-  if cfg.has_option(section, name):
-    return cfg.get(section, name)
-  return default
+_GetOption = __GetDefault(ConfigParser.RawConfigParser.get)
+_GetBoolOption = __GetDefault(ConfigParser.RawConfigParser.getboolean)
 
 
 def _GetSshPort():
@@ -118,3 +131,45 @@ class Config(object):
     self.nx_protocol_version = \
       utils.ParseVersion(ver_string, constants.NXAGENT_VERSION_SEP,
                          constants.PROTOCOL_VERSION_DIGITS)
+
+    self.bash = \
+      _GetOption(cfg, section, VAR_BASH,
+                 constants.BASH)
+
+    self.netcat = \
+      _GetOption(cfg, section, VAR_NETCAT,
+                 constants.NETCAT)
+
+    self.xrdb = \
+      _GetOption(cfg, section, VAR_XRDB,
+                 constants.XRDB)
+
+    self.su = \
+      _GetOption(cfg, section, VAR_SU,
+                 constants.SU)
+
+    self.ssh = \
+      _GetOption(cfg, section, VAR_SSH,
+                 constants.SSH)
+
+    self.xauth = \
+      _GetOption(cfg, section, VAR_XAUTH,
+                 constants.XAUTH)
+
+    self.xsession = \
+      _GetOption(cfg, section, VAR_XSESSION,
+                 constants.XSESSION)
+
+    self.nxagent = \
+      _GetOption(cfg, section, VAR_NXAGENT,
+                 constants.NXAGENT)
+
+    self.use_xsession = \
+      _GetBoolOption(cfg, section, VAR_USE_XSESSION,
+                     constants.USE_XSESSION)
+
+    if self.use_xsession:
+      self.start_kde_command = "%s %s" % \
+          (self.xsession, self.start_kde_command)
+      self.start_gnome_command = "%s %s" % \
+          (self.xsession, self.start_gnome_command)

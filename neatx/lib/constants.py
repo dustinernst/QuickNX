@@ -25,8 +25,6 @@
 from neatx import _autoconf
 
 
-NXDIR = "/usr/bin"
-
 SYSLOG_ADDRESS = "/dev/log"
 BASH = "/bin/bash"
 NETCAT = "/bin/netcat"
@@ -35,10 +33,11 @@ SU = "/bin/su"
 SSH = "/usr/bin/ssh"
 XAUTH = "/usr/bin/xauth"
 XSESSION = "/etc/X11/Xsession"
+NXAGENT = "/usr/bin/nxagent"
 
 START_CONSOLE_COMMAND = "/usr/bin/xterm"
-START_KDE_COMMAND = XSESSION + " startkde"
-START_GNOME_COMMAND = XSESSION + " gnome-session"
+START_KDE_COMMAND = "startkde"
+START_GNOME_COMMAND = "gnome-session"
 
 NXUSER = "nx"
 NXSERVER = _autoconf.PKGLIBDIR + "/nxserver"
@@ -46,7 +45,7 @@ NXNODE = _autoconf.PKGLIBDIR + "/nxnode"
 NXNODE_WRAPPER = _autoconf.PKGLIBDIR + "/nxnode-wrapper"
 NXNC = _autoconf.PKGLIBDIR + "/nxnc"
 NXDIALOG = _autoconf.PKGLIBDIR + "/nxdialog"
-NXAGENT = NXDIR + "/nxagent"
+NXAGENT_PKGNAME = "nxagent"
 FDCOPY = _autoconf.PKGLIBDIR + "/fdcopy"
 TTYSETUP = _autoconf.PKGLIBDIR + "/ttysetup"
 
@@ -66,6 +65,8 @@ DISPLAY_CHECK_PATHS = frozenset([
   "/tmp/.X%s-lock",
   "/tmp/.X11-unix/X%s",
   ])
+
+USE_XSESSION = True
 
 DEFAULT_SUBSCRIPTION = "GPL"
 DEFAULT_SSH_PORT = 22
