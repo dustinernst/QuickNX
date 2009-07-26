@@ -245,7 +245,8 @@ class LoginCommandHandler(object):
     """
     server = self._server
 
-    logging.info("Trying login for user %s", username)
+    logging.info("Trying login for user %r using auth method %r", username,
+                 self._cfg.auth_method)
 
     # Passing username to support virtual users in the future
     args = self._GetNxServerArgs(username)
