@@ -123,7 +123,10 @@ class IOChannel(gobject.GObject, object):
     """Closes this channel.
 
     """
-    self.__Update(True)
+    if self.__channel:
+      self.__Close()
+    else:
+      self.__Update(True)
 
   def Write(self, data):
     """Asynchronous write.
@@ -453,7 +456,7 @@ class Program(gobject.GObject, object):
   pid = property(fget=__GetPid)
 
   def __LogOutput(self, _, line, pipename):
-    logging.debug("%s %s: %s", self.__progname, pipename, line)
+    logging.debug("%s[%d] %s: %s", self.__progname, self.pid, pipename, line)
 
   @staticmethod
   def __FormatEnvironment(env):
@@ -511,7 +514,7 @@ class Program(gobject.GObject, object):
                           standard_error=True,
                           **kwargs)
 
-    logging.info("Child pid %r", pid)
+    logging.info("Child %s[%d] started", self.__progname, pid)
     self.__pid = pid
 
     self.stdin.Attach(stdin_fd)
@@ -550,8 +553,11 @@ class Program(gobject.GObject, object):
     """Checks whether program has exitted and all I/O has been handled.
 
     """
-    if (self.stdin.closed and
-        self.stdout.closed and
+    # If the child has exited, we no longer care about stdin.
+    if self.__exitcode is not None:
+      self.stdin.Detach()
+
+    if (self.stdout.closed and
         self.stderr.closed and
         self.__exitcode is not None):
       # TODO: Keep part of stderr output in case of errors (deque)
@@ -568,10 +574,10 @@ class Program(gobject.GObject, object):
         raise RuntimeError("Invalid child status")
 
       if exitstatus == 0 and signum is None:
-        logging.debug("%s exited cleanly", self.__progname)
+        logging.debug("%s[%d] exited cleanly", self.__progname, self.pid)
       else:
-        logging.error("%s failed (status=%s, signal=%s)",
-                      self.__progname, exitstatus, signum)
+        logging.error("%s[%d] failed (status=%s, signal=%s)",
+                      self.__progname, self.pid, exitstatus, signum)
 
       self.__EmitExited(exitstatus, signum)
 
