@@ -289,7 +289,7 @@ class SessionRunner(object):
 
     logging.info("Starting xauth for %r", cookies)
     xauth = agent.XAuthProgram(sess.GetSessionEnvVars(), sess.authorityfile,
-                               cookies)
+                               cookies, self.__ctx.cfg)
     xauth.connect(agent.XAuthProgram.EXITED_SIGNAL, self.__XAuthDone)
     xauth.Start()
 
@@ -367,7 +367,7 @@ class SessionRunner(object):
 
     settings = "Xft.dpi: 96"
 
-    xrdb = agent.XRdbProgram(self.__GetXProgramEnv(), settings)
+    xrdb = agent.XRdbProgram(self.__GetXProgramEnv(), settings, self.__ctx.cfg)
     xrdb.connect(agent.XRdbProgram.EXITED_SIGNAL, self.__XRdbDone)
     xrdb.Start()
 

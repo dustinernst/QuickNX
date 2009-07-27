@@ -185,7 +185,7 @@ class SuAuth(_ExpectAuthBase):
       # Run command
       utils.ShellQuoteArgs(args)
       ])
-    return [constants.SU, username, "-c", cmd]
+    return [self._cfg.su, username, "-c", cmd]
 
   def GetPasswordPrompt(self):
     return re.compile(r"^Password:\s*", re.I | re.M)
@@ -213,7 +213,7 @@ class SshAuth(_ExpectAuthBase):
       ]
 
     cmd = utils.ShellQuoteArgs(args)
-    return ([constants.SSH, "-2", "-x", "-l", username, "-p", str(port)] +
+    return ([self._cfg.ssh, "-2", "-x", "-l", username, "-p", str(port)] +
             options + [host, "--", cmd])
 
   def GetPasswordPrompt(self):

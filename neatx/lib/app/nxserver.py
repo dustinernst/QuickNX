@@ -716,7 +716,7 @@ class NxServerProgram(cli.GenericProgram):
     stderr_logger = utils.LogFunctionWithPrefix(logging.error,
                                                 "netcat stderr: ")
 
-    args = [constants.NETCAT, "--", host, str(port)]
+    args = [self.cfg.netcat, "--", host, str(port)]
 
     process = subprocess.Popen(args, shell=False, close_fds=True,
                                stdin=None, stdout=None, stderr=subprocess.PIPE)

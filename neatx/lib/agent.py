@@ -114,16 +114,18 @@ class XAuthProgram(daemon.Program):
   """
   _MIT_MAGIC_COOKIE_1 = "MIT-MAGIC-COOKIE-1"
 
-  def __init__(self, env, filename, cookies):
+  def __init__(self, env, filename, cookies, cfg):
     """Initializes this class.
 
     @type env: dict
     @param env: Environment variables
     @type cookies: list of tuples
     @param cookies: Cookies as [(display, cookie), ...]
+    @type cfg: L{config.Config}
+    @param cfg: Configuration object
 
     """
-    args = [constants.XAUTH, "-f", filename]
+    args = [cfg.xauth, "-f", filename]
     daemon.Program.__init__(self, args, env=env,
                             stdin_data=self.__BuildInput(cookies))
 
@@ -154,8 +156,8 @@ class XRdbProgram(daemon.Program):
   about color, fonts, and so on for applications."
 
   """
-  def __init__(self, env, settings):
-    args = [constants.XRDB, "-merge"]
+  def __init__(self, env, settings, cfg):
+    args = [cfg.xrdb, "-merge"]
 
     if not settings.endswith(os.linesep):
       settings += os.linesep
@@ -197,7 +199,7 @@ class NxAgentProgram(daemon.Program):
     """
     self._ctx = ctx
 
-    args = [constants.NXAGENT] + self._GetNxAgentArgs()
+    args = [self._ctx.cfg.nxagent] + self._GetNxAgentArgs()
 
     display = self._GetDisplayWithOptions()
     logging.debug("Display for nxagent: %r", display)

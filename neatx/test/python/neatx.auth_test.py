@@ -113,6 +113,9 @@ class _FakeAuthConfig:
     self.auth_ssh_host = "localhost"
     self.auth_ssh_port = 22
 
+    self.su = constants.SU
+    self.ssh = constants.SSH
+
 
 class TestGetAuthenticator(unittest.TestCase):
   """Tests for GetAuthenticator"""
