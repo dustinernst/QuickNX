@@ -74,14 +74,13 @@ class _ExpectAuthBase(_AuthBase):
     try:
       while True:
         idx = child.expect(patterns)
-        #print ("%s, before=%r, buffer=%r, after=%r" %
-        #       (idx, child.before, child.buffer, child.after))
+
+        # Store all output seen before the match
+        buf.write(child.before)
+        # Store the matched output
+        buf.write(child.after)
 
         if idx == password_prompt_idx:
-          buf.write(child.before)
-          buf.write(child.after)
-          buf.write(child.buffer)
-
           self._Send(child, password + os.linesep)
 
           # Wait for end of password prompt
@@ -91,9 +90,6 @@ class _ExpectAuthBase(_AuthBase):
         elif idx == nx_idx:
           # Program was started
           auth_successful = True
-          buf.write(child.before)
-          buf.write(child.after)
-          buf.write(child.buffer)
 
           nxbuf.write(child.after)
           nxbuf.write(child.buffer)
@@ -106,6 +102,8 @@ class _ExpectAuthBase(_AuthBase):
       buf.write(child.before)
 
     except pexpect.TIMEOUT:
+      buf.write(child.before)
+      logging.debug("Authentication timed out (output=%r)", buf.getvalue())
       raise errors.AuthTimeoutError()
 
     if not auth_successful:
@@ -190,7 +188,7 @@ class SuAuth(_ExpectAuthBase):
     return [constants.SU, username, "-c", cmd]
 
   def GetPasswordPrompt(self):
-    return re.compile(r"^Password:\s*", re.I)
+    return re.compile(r"^Password:\s*", re.I | re.M)
 
 
 class SshAuth(_ExpectAuthBase):
@@ -210,6 +208,8 @@ class SshAuth(_ExpectAuthBase):
 
       # Always trust host keys
       "-oStrictHostKeyChecking=no",
+      # Don't try to write a known_hosts file
+      "-oUserKnownHostsFile=/dev/null",
       ]
 
     cmd = utils.ShellQuoteArgs(args)
@@ -217,7 +217,7 @@ class SshAuth(_ExpectAuthBase):
             options + [host, "--", cmd])
 
   def GetPasswordPrompt(self):
-    return re.compile(r"^.*@.*\s+password:\s*", re.I)
+    return re.compile(r"^.*@.*\s+password:\s*", re.I | re.M)
 
 
 _AUTH_METHOD_MAP = {
