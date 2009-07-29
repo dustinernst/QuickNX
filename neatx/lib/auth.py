@@ -188,7 +188,7 @@ class SuAuth(_ExpectAuthBase):
     return [self._cfg.su, username, "-c", cmd]
 
   def GetPasswordPrompt(self):
-    return re.compile(r"^Password:\s*", re.I | re.M)
+    return re.compile(r"^(\S+\s)?Password:\s*", re.I | re.M)
 
 
 class SshAuth(_ExpectAuthBase):
