@@ -463,20 +463,18 @@ class NxAgentProgram(daemon.Program):
     formatted = ",".join(["%s=%s" % (name, value)
                           for name, value in opts.iteritems()])
 
-    return "%s:%s" % (formatted, sess.display)
+    return "nx/nx,%s:%s\n" % (formatted, sess.display)
 
   def _GetDisplayWithOptions(self):
     """Returns the value for the DISPLAY variable for nxagent.
 
     """
-    opts = self._GetStaticOptions()
+    sess = self._ctx.session
 
-    return "nx/nx,%s" % self._FormatNxAgentOptions(opts)
+    return "nx/nx,options=%s:%s" % (sess.optionsfile, sess.display)
 
-  def _GetStaticOptions(self):
-    """Returns static session options for nxagent.
-
-    These don't change during the lifetime of a session.
+  def _GetOptions(self):
+    """Returns session options for nxagent.
 
     @rtype: dict
     @return: Options
@@ -496,20 +494,24 @@ class NxAgentProgram(daemon.Program):
       # connections come directly from nxclient.
       # Note: Unencrypted connections are not supported.
       "accept": "127.0.0.1",
-
       "backingstore": "1",
+      "cache": protocol.FormatNxSize(sess.cache),
       "cleanup": "0",
+      "client": sess.client,
       "clipboard": "both",
       "composite": "1",
       "cookie": sess.cookie,
       "id": sess.full_id,
+      "images": protocol.FormatNxSize(sess.images),
+      "keyboard": sess.keyboard,
+      "link": sess.link,
       # TODO: What is this used for in nxagent?
       "product": "Neatx-%s" % constants.DEFAULT_SUBSCRIPTION,
+      "render": "1",
+      "resize": protocol.FormatNxBoolean(sess.resize),
       "shmem": "1",
       "shpix": "1",
       "strict": "0",
-      "type": shorttype,
-      "render": "1",
       }
 
     if sess.type == constants.SESS_TYPE_SHADOW:
@@ -522,29 +524,18 @@ class NxAgentProgram(daemon.Program):
       opts["shadowuid"] = self._ctx.uid
       opts["shadow"] = ":%s" % sess.shadow_display
 
+    if not sess.rootless:
+      opts["geometry"] = sess.geometry
+    else:
+      opts["menu"] = "1"
+      opts["fullscreen"] = protocol.FormatNxBoolean(sess.fullscreen)
+
+    if sess.rootless and sess.type == constants.SESS_TYPE_CONSOLE:
+      opts["type"] = "rootless"
+    else:
+      opts["type"] = shorttype
+
     return opts
-
-  def _GetOptions(self):
-    """Returns session options for nxagent.
-
-    These can change between different connections.
-
-    @rtype: dict
-    @return: Options
-
-    """
-    sess = self._ctx.session
-
-    return {
-      "cache": protocol.FormatNxSize(sess.cache),
-      "client": sess.client,
-      "fullscreen": protocol.FormatNxBoolean(sess.fullscreen),
-      "geometry": sess.geometry,
-      "images": protocol.FormatNxSize(sess.images),
-      "keyboard": sess.keyboard,
-      "link": sess.link,
-      "resize": protocol.FormatNxBoolean(sess.resize),
-      }
 
   def _GetNxAgentArgs(self):
     """Returns command line arguments for nxagent.
