@@ -28,6 +28,8 @@ import gobject
 import logging
 import os
 
+_PROCESS_EXIT_IO_TIMEOUT = 1
+
 
 class SignalRegistration:
   def __init__(self, emitter, handle):
@@ -547,17 +549,18 @@ class Program(gobject.GObject, object):
     """Called when I/O pipe to process is closed.
 
     """
-    self.__CheckExit()
+    pass
 
   def __CheckExit(self):
     """Checks whether program has exitted and all I/O has been handled.
 
     """
-    # If the child has exited, we no longer care about stdin.
-    if self.__exitcode is not None:
-      self.stdin.Detach()
+    logging.debug("__CheckExit %s[%d] stdin:%r stdout:%r stderr:%r exit:%r",
+        self.__progname, self.pid, self.stdin.closed,
+        self.stdout.closed, self.stderr.closed, self.__exitcode)
 
-    if (self.stdout.closed and
+    if (self.stdin.closed and
+        self.stdout.closed and
         self.stderr.closed and
         self.__exitcode is not None):
       # TODO: Keep part of stderr output in case of errors (deque)
@@ -580,6 +583,21 @@ class Program(gobject.GObject, object):
                       self.__progname, self.pid, exitstatus, signum)
 
       self.__EmitExited(exitstatus, signum)
+
+    else:
+      # Add timeout to close stdin/out/err
+      gobject.timeout_add(_PROCESS_EXIT_IO_TIMEOUT * 1000,
+                          self.__CloseAndExit)
+
+
+  def __CloseAndExit(self):
+    logging.debug("__CloseEndExit %s[%d] stdin:%r stdout:%r stderr:%r",
+        self.__progname, self.pid, self.stdin.closed,
+        self.stdout.closed, self.stderr.closed)
+    self.stdin.Detach()
+    self.stdout.Detach()
+    self.stderr.Detach()
+    self.__CheckExit()
 
   def __EmitExited(self, exitcode, signum):
     self.emit(self.EXITED_SIGNAL, exitcode, signum)
