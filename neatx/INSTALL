@@ -11,9 +11,9 @@ installed:
     http://pexpect.sourceforge.net/
   - simplejson Python module
     http://www.undefined.org/python/#simplejson
-  - PyGTK+ 2.12 or higher
+  - PyGTK+ 2.14 or higher
     http://www.pygtk.org/
-  - PyGObject 2.12 or higher
+  - PyGObject 2.14 or higher
     http://www.pygtk.org/
   - GNU C Compiler
     http://gcc.gnu.org/
@@ -62,3 +62,5 @@ To finish setup (this assumes you've installed to the standard locations):
     install -D -m 600 -o nx /usr/local/share/neatx/authorized_keys.nomachine ~nx/.ssh/authorized_keys
   - Install the example config file:
     cp /usr/local/share/doc/neatx/neatx.conf.example /usr/local/etc/neatx.conf
+  - Edit neatx.conf to configure command paths that might be different on your
+    system (e.g. netcat-path on fedora)
