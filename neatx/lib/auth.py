@@ -52,9 +52,12 @@ class _ExpectAuthBase(_AuthBase):
     all_args = [self._GetTtySetupPath()] + self.GetCommand(username, args)
     logging.debug("Auth command %r", all_args)
 
-    # Avoid NLS issues by setting LC_ALL=C
+    # Avoid NLS issues by unsetting LC_*, and setting LANG=C
     env = os.environ.copy()
-    env["LC_ALL"] = "C"
+    env["LANG"] = "C"
+    for key in env.keys():
+      if key.startswith('LC_'):
+        del env[key]
 
     # Using variables instead of hardcoded indexes
     patterns = []
