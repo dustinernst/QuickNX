@@ -9,7 +9,7 @@ m4_define([version_full],
                     version_revision, version_suffix))
 
 AC_PREREQ(2.59)
-AC_INIT(neatx, version_full, ganeti@googlegroups.com)
+AC_INIT(neatx, version_full, neatx@googlegroups.com)
 AC_CONFIG_AUX_DIR(autotools)
 AC_CONFIG_SRCDIR(configure)
 AM_INIT_AUTOMAKE([1.9 foreign tar-ustar -Wall -Wno-portability])

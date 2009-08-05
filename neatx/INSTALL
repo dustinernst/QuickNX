@@ -8,7 +8,7 @@ installed:
   - Python 2.4 (or a higher 2.x version)
     http://www.python.org/
   - Pexpect
-    http://pexpect.sourceforge.net/
+    http://sourceforge.net/projects/pexpect
   - simplejson Python module
     http://www.undefined.org/python/#simplejson
   - PyGTK+ 2.14 or higher
@@ -24,11 +24,11 @@ installed:
   - GNU Make
     http://www.gnu.org/software/make/
   - Python Docutils
-    http://docutils.sourceforge.net/
+    http://sourceforge.net/projects/docutils
   - NX Agent 3.3.0
     http://www.nomachine.com/sources
   - Netcat
-    http://netcat.sourceforge.net/
+    http://sourceforge.net/projects/netcat
   - NXClient (or equivalent, only NoMachine's client has been tested though)
     http://www.nomachine.com/select-package-client.php
   - Xauth & Xrdb
