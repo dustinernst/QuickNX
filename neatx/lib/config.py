@@ -67,6 +67,7 @@ def __GetDefault(func):
 
 _GetOption = __GetDefault(ConfigParser.RawConfigParser.get)
 _GetBoolOption = __GetDefault(ConfigParser.RawConfigParser.getboolean)
+_GetIntOption = __GetDefault(ConfigParser.RawConfigParser.getint)
 
 
 def _GetSshPort():
@@ -123,8 +124,8 @@ class Config(object):
 
     self.auth_ssh_host = _GetOption(cfg, section, VAR_AUTH_SSH_HOST,
                                     _hostname)
-    self.auth_ssh_port = _GetOption(cfg, section, VAR_AUTH_SSH_PORT,
-                                    _GetSshPort())
+    self.auth_ssh_port = _GetIntOption(cfg, section, VAR_AUTH_SSH_PORT,
+                                       _GetSshPort())
 
     ver_string = _GetOption(cfg, section, VAR_NX_PROTOCOL_VERSION,
                             constants.DEFAULT_NX_PROTOCOL_VERSION)
