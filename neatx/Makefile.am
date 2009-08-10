@@ -145,10 +145,10 @@ $(TESTS): neatx srclinks lib/_autoconf.py src/fdcopy src/ttysetup
 
 doc/%.html: doc/%.rst
 	@if test -z "$(RST2HTML)"; then \
-		echo 'rst2html not found during configure'; \
-		exit 1; \
+		echo 'rst2html not found during configure, not building docs'; \
+	else \
+		$(RST2HTML) $< $@; \
 	fi
-	$(RST2HTML) $< $@
 
 lib/_autoconf.py: Makefile stamp-directories
 	set -e; \
