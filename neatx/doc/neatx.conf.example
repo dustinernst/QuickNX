@@ -6,26 +6,26 @@
 loglevel = debug
 nx-protocol-version = 3.3.0
 ## Use Xsession to run KDE/Gnome?
-# use-xsession = true
+#use-xsession = true
 
 ## Session types
-# start-console-command = /usr/bin/xterm
-# start-kde-command = startkde
-# start-gnome-command = gnome-session
+#start-console-command = /usr/bin/xterm
+#start-kde-command = startkde
+#start-gnome-command = gnome-session
 
 ## Auth
 ## Possiblities: su, ssh (not very tested)
-# auth-method = su
+#auth-method = su
 ## Defaults to the current hostname
-# auth-ssh-host =
-# auth-ssh-port = 22
+#auth-ssh-host =
+#auth-ssh-port = 22
 
 ## Command Paths
-# bash-path = /bin/bash
-# netcat-path = /bin/netcat
-# xrdb-path = /usr/bin/xrdb
-# su-path = /bin/su
-# ssh-path = /usr/bin/ssh
-# xauth-path = /usr/bin/xauth
-# xsession-path = /etc/X11/Xsession
-# nxagent-path = /usr/bin/nxagent
+#bash-path = /bin/bash
+#netcat-path = /bin/netcat
+#xrdb-path = /usr/bin/xrdb
+#su-path = /bin/su
+#ssh-path = /usr/bin/ssh
+#xauth-path = /usr/bin/xauth
+#xsession-path = /etc/X11/Xsession
+#nxagent-path = /usr/bin/nxagent
