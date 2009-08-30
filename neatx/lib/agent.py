@@ -98,11 +98,39 @@ class UserApplication(daemon.Program):
     else:
       executable = None
 
+    lang = self._GetLangEnv(env)
+    if lang:
+      env['LANG'] = lang
+
     # TODO: logfile
 
     daemon.Program.__init__(self, args, env=env, cwd=cwd,
                             executable=executable,
                             umask=constants.DEFAULT_APP_UMASK)
+
+  def _GetLangEnv(self, env):
+    lang_rx = re.compile("^\s*Language\s*=\s*(?P<lang>\S+)\s*$", re.M)
+    dmrc_path = os.path.expanduser("~/.dmrc")
+
+    if not os.path.exists(dmrc_path):
+      logging.debug("Dmrc doesn't exist")
+      return
+    logging.debug("Dmrc exists")
+
+    try:
+      contents = open(dmrc_path).read()
+    except IOError, err:
+      logging.warning("Error reading %r: %r", dmrc_path, err.strerror)
+      return
+
+    m = lang_rx.match(contents)
+    if not m:
+      logging.debug("Dmrc doesn't contain Language setting")
+      return
+
+    lang = m.group("lang")
+    logging.debug("Dmrc language setting %r", lang)
+    return lang
 
 
 class XAuthProgram(daemon.Program):
