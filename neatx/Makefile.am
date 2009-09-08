@@ -109,6 +109,7 @@ EXTRA_DIST = \
 	autotools/gen-log-wrapper \
 	doc/DEVNOTES \
 	extras/upload.in \
+	extras/rpm/neatx.spec \
 	$(docrst) \
 	$(dist_TESTS) \
 	$(TEST_FILES)

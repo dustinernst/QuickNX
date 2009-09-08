@@ -34,7 +34,11 @@ installed:
   - Xauth & Xrdb
     http://xorg.freedesktop.org/releases/individual/app/
 
-On debian/ubuntu, these (except NX Agent) can be satisfied using:
+
+Debian/Ubuntu installation
+==========================
+
+On debian/ubuntu, these requirements (except NX Agent) can be satisfied using:
   sudo apt-get install make openssh-server python python-pexpect \
        python-simplejson python-gtk2 python-gobject gcc autoconf automake \
        python-docutils netcat xauth x11-xserver-utils
@@ -42,6 +46,28 @@ On debian/ubuntu, these (except NX Agent) can be satisfied using:
 Nx Agent is not currently included in debian or ubuntu. Ubuntu packages can be
 located here:
   https://launchpad.net/~freenx-team/+archive/ppa
+
+
+Redhat/Fedora/Rpm-based distros
+===============================
+
+To build a .rpm package, run these commands (the ones prefixed with # should be
+run as root). Replace names in <>'s appropriately.
+
+# yum install yum-utils rpmdevtools
+$ rpmdev-setuptree
+$ cd /path/to/neatx/tree
+$ tar czf ~/rpmbuild/SOURCES/neatx-0.1.tar.gz *
+$ rpmbuild -bs contrib/rpm/neatx.spec --nodeps
+# yum-builddep ~<user>/rpmbuild/SRPMS/neatx-*.src.rpm
+$ rpmbuild -bb contrib/rpm/neatx.spec
+# yum install --nogpgcheck ~<user>/rpmbuild/RPMS/<platform>/<rpmname>
+
+Then customise /etc/neatx.conf as below.
+
+
+Building/installing from source
+====================
 
 To build, run the following as a normal user:
   - ./autogen.sh
