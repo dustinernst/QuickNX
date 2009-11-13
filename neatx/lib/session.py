@@ -49,7 +49,7 @@ def NewUniqueId(_data=None):
 
   """
   if _data is None:
-    _data = random.getrandbits(1024)
+    _data = random.SystemRandom().getrandbits(1024)
   return md5.md5(str(_data)).hexdigest().upper()
 
 
