@@ -148,7 +148,10 @@ class LoginCommandHandler(object):
 
     # Not writing username. If user specified a username starting with "NX>",
     # the client could interpret it as a response.
-    server.WriteLine("")
+    if username.startswith('NX>'):
+     server.WriteLine("")
+    else:
+     server.WriteLine(username)
 
     # Read password without echo on interactive terminals
     def _RequestPassword():
@@ -157,14 +160,15 @@ class LoginCommandHandler(object):
       return server.ReadLine(hide=True)
 
     password = server.WithoutTerminalEcho(_RequestPassword)
+
+    # Not writing real password for security reasons.
+    server.WriteLine(NX_DUMMY_PASSWORD)
+
     if not password:
       server.Write(500, ("Password cannot be in MD5 when not using the NX "
                          "password DB."))
       server.Write(500, "Please update your NX Client")
       raise protocol.NxQuitServer()
-
-    # Not writing real password for security reasons.
-    server.WriteLine(NX_DUMMY_PASSWORD)
 
     self._TryLogin(username, password)
 
