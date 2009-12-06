@@ -33,6 +33,7 @@ Requires: nc
 Requires: nx
 Requires: xauth
 Requires: xrdb
+Requires: xorg-x11-fonts-misc
 Requires(pre): shadow-utils
 Requires(post): %__install
 
