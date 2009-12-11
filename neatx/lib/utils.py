@@ -32,6 +32,7 @@ import pwd
 import resource
 import re
 import signal
+import socket
 import sys
 import syslog
 import tempfile
@@ -877,3 +878,10 @@ def GetCurrentUserName():
 
   """
   return pwd.getpwuid(os.getuid())[0]
+
+def GetHostname():
+  """Returns hostname, minus illegal characters.
+
+  """
+  host = socket.getfqdn()
+  return host.replace(",", "")

@@ -81,6 +81,11 @@ class SessionParameterError(GenericError):
 
   """
 
+class IllegalCharacterError(GenericError):
+  """String contains illegal character (e.g. a comma in session options).
+
+  """
+
 
 # Exception classes should be added above
 

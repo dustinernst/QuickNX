@@ -61,10 +61,6 @@ CMD_GET_SHADOW_COOKIE = "getshadowcookie"
 PROTO_SEPARATOR = "\0"
 
 
-def GetHostname():
-  return socket.getfqdn()
-
-
 def _GetUserShell(username):
   return pwd.getpwnam(username).pw_shell
 
@@ -116,7 +112,7 @@ class NodeSession(session.SessionBase):
   def __init__(self, ctx, clientargs, _env=None):
     self._ctx = ctx
 
-    hostname = GetHostname()
+    hostname = utils.GetHostname()
     display = FindUnusedDisplay()
 
     session.SessionBase.__init__(self, ctx.sessid, hostname, display,

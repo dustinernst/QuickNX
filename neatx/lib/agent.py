@@ -491,7 +491,7 @@ class NxAgentProgram(daemon.Program):
     formatted = ",".join(["%s=%s" % (name, value)
                           for name, value in opts.iteritems()])
 
-    return "nx/nx,%s:%s\n" % (formatted, sess.display)
+    return "nx/nx,%s:%d\n" % (formatted, sess.display)
 
   def _GetDisplayWithOptions(self):
     """Returns the value for the DISPLAY variable for nxagent.
@@ -499,7 +499,9 @@ class NxAgentProgram(daemon.Program):
     """
     sess = self._ctx.session
 
-    return "nx/nx,options=%s:%s" % (sess.optionsfile, sess.display)
+    self.__CheckStrChars(sess.optionsfile, "Session options file")
+
+    return "nx/nx,options=%s:%d" % (sess.optionsfile, sess.display)
 
   def _GetOptions(self):
     """Returns session options for nxagent.
@@ -592,7 +594,7 @@ class NxAgentProgram(daemon.Program):
       # nxagent port).
       "-nolisten", "tcp",
 
-      ":%s" % sess.display,
+      ":%d" % sess.display,
       ]
 
     if sess.type == constants.SESS_TYPE_SHADOW:
@@ -615,6 +617,7 @@ class NxAgentProgram(daemon.Program):
     """
     sess = self._ctx.session
     filename = sess.optionsfile
+    self.__CheckOptsChars(opts)
     formatted = self._FormatNxAgentOptions(opts)
 
     logging.debug("Writing session options %r to %s", formatted, filename)
@@ -622,3 +625,30 @@ class NxAgentProgram(daemon.Program):
 
   def __EmitDisplayReady(self):
     self.emit(self.DISPLAY_READY_SIGNAL)
+
+  def __CheckOptsChars(self, opts):
+    """Checks to make sure option name/values don't contain illegal characters.
+
+    @type opts: dict
+    @param opts: Options
+
+    """
+
+    for name, value in opts.iteritems():
+      self.__CheckStrChars(name, "Name of option %r" % name)
+      self.__CheckStrChars(value, "Value of option %r (%r)" % (name, value))
+
+  def __CheckStrChars(self, s, description):
+    """Checks to make sure string don't contain illegal characters.
+
+    @type s: string
+    @param s: text to test
+    @type description: string
+    @param description: description of text
+
+    """
+    illegal_chars = [","]
+    for c in illegal_chars:
+      if c in s:
+        raise errors.IllegalCharacterError("%s contains illegal character %r" %
+                                           (description, c))

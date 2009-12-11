@@ -58,9 +58,9 @@ run as root). Replace names in <>'s appropriately.
 $ rpmdev-setuptree
 $ cd /path/to/neatx/tree
 $ tar czf ~/rpmbuild/SOURCES/neatx-0.1.tar.gz *
-$ rpmbuild -bs extras/rpm/neatx.spec --nodeps
+$ rpmbuild -bs contrib/rpm/neatx.spec --nodeps
 # yum-builddep ~<user>/rpmbuild/SRPMS/neatx-*.src.rpm
-$ rpmbuild -bb extras/rpm/neatx.spec
+$ rpmbuild -bb contrib/rpm/neatx.spec
 # yum install --nogpgcheck ~<user>/rpmbuild/RPMS/<platform>/<rpmname>
 
 Then customise /etc/neatx.conf as below.
