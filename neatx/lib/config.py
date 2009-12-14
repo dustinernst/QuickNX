@@ -92,7 +92,7 @@ class Config(object):
 
     """
     if _hostname is None:
-      _hostname = utils.GetHostname()
+      _hostname = socket.gethostname()
 
     cfg = _ReadConfig(filename)
 
