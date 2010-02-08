@@ -64,6 +64,7 @@ getent group nx >/dev/null || groupadd -r nx
 getent passwd nx >/dev/null || \
        useradd -r -g nx -m -d %nx_homedir -s %_libdir/%{name}/nxserver-login-wrapper \
       -c "System account for the %{name} package" nx
+chown -R nx: %nx_homedir
 exit 0
 
 %post
