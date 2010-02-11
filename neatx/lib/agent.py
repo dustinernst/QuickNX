@@ -426,11 +426,10 @@ class NxAgentProgram(daemon.Program):
     if new == old:
       pass
 
-    elif (old == constants.SESS_STATE_CREATED and
-          new == constants.SESS_STATE_STARTING):
-      self.__EmitDisplayReady()
-
     elif new == constants.SESS_STATE_WAITING:
+      if old == constants.SESS_STATE_STARTING:
+        self.__EmitDisplayReady()
+
       port = m.group("port")
 
       try:
