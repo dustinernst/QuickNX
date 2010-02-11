@@ -26,7 +26,7 @@ BuildRequires: python-docutils
 Requires: openssh
 Requires: pexpect
 Requires: pygobject2 >= 2.14
-Requires: pygtk2 >= 2.13
+Requires: pygtk2 >= 2.10
 Requires: python >= 2.4
 Requires: python-simplejson
 Requires: nc

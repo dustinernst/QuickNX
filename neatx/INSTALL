@@ -11,7 +11,7 @@ installed:
     http://sourceforge.net/projects/pexpect
   - simplejson Python module
     http://www.undefined.org/python/#simplejson
-  - PyGTK+ 2.14 or higher
+  - PyGTK+ 2.10 or higher
     http://www.pygtk.org/
   - PyGObject 2.14 or higher
     http://www.pygtk.org/
