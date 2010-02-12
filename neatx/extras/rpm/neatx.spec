@@ -23,17 +23,19 @@ BuildRequires: make
 BuildRequires: python-devel
 BuildRequires: python-docutils
 
+Requires: nc
+Requires: nx
 Requires: openssh
 Requires: pexpect
 Requires: pygobject2 >= 2.14
 Requires: pygtk2 >= 2.10
 Requires: python >= 2.4
 Requires: python-simplejson
-Requires: nc
-Requires: nx
 Requires: xauth
-Requires: xrdb
 Requires: xorg-x11-fonts-misc
+Requires: xorg-x11-xkb-utils
+Requires: xrdb
+Requires: xterm
 Requires(pre): shadow-utils
 Requires(post): %__install
 
@@ -45,6 +47,11 @@ NoMachine.
 %setup -cq
 
 %build
+# fixup paths
+sed -ri 's@^(XSESSION\s+=).*@\1 "/etc/X11/xinit/Xsession"@' lib/constants.py
+sed -ri 's@^(NETCAT\s+=).*@\1 "/usr/bin/nc"@' lib/constants.py
+sed -ri 's@^(#xsession-path\s+=).*@\1 /etc/X11/xinit/Xsession@' doc/neatx.conf.example
+sed -ri 's@^(#netcat-path\s+=).*@\1 /usr/bin/nc@' doc/neatx.conf.example
 ./autogen.sh
 %configure
 make
