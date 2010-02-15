@@ -69,7 +69,7 @@ _GENERAL_ERROR_RE = re.compile(r"^Error:\s+(?P<error>.*)$")
 _GENERAL_WARNING_RE = re.compile(r"^Warning:\s+(?P<warning>.*)$")
 _GEOMETRY_RE = re.compile(r"^Info:\s+Screen\s+\[0\]\s+resized\s+to\s+"
                           r"geometry\s+\[(?P<geometry>[^\]]+)\]"
-                          r"( fullscreen \[\d\])?\.$")
+                          r"( fullscreen \[(?P<fullscreen>\d)\])?\.$")
 
 
 class UserApplication(daemon.Program):
@@ -384,8 +384,10 @@ class NxAgentProgram(daemon.Program):
     m = _GEOMETRY_RE.match(line)
     if m:
       geometry = m.group("geometry")
-      self._ChangeGeometry(geometry)
-      logging.info("Matched info geometry change, new is %r", geometry)
+      fullscreen = (m.group("fullscreen") == "1")
+      self._ChangeGeometry(geometry, fullscreen)
+      logging.info("Matched info geometry change, new is %r, fullscreen %r",
+                   geometry, fullscreen)
       return
 
   def _CheckStatus(self, line, _status_map=None):
@@ -467,15 +469,18 @@ class NxAgentProgram(daemon.Program):
     # Send SIGHUP to reopen port
     self._SendSighup()
 
-  def _ChangeGeometry(self, geometry):
+  def _ChangeGeometry(self, geometry, fullscreen):
     """Called when geometry changed.
 
     @type geometry: str
     @param geometry: Geometry information
+    @type fullscreen: boolean
+    @param fullscreen: Fullscreen state
 
     """
     sess = self._ctx.session
     sess.geometry = geometry
+    sess.fullscreen = fullscreen
     sess.Save()
 
   def _FormatNxAgentOptions(self, opts):
@@ -553,10 +558,10 @@ class NxAgentProgram(daemon.Program):
       opts["shadowuid"] = self._ctx.uid
       opts["shadow"] = ":%s" % sess.shadow_display
 
-    if not sess.rootless:
-      opts["geometry"] = sess.geometry
-    else:
+    if sess.rootless:
       opts["menu"] = "1"
+    else:
+      opts["geometry"] = sess.geometry
       opts["fullscreen"] = protocol.FormatNxBoolean(sess.fullscreen)
 
     if sess.rootless and sess.type == constants.SESS_TYPE_CONSOLE:
