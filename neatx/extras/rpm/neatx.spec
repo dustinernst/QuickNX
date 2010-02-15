@@ -61,6 +61,7 @@ rm -rf %{buildroot}
 make DESTDIR=%{buildroot} install
 # provide a meaningfull config file
 %__install -D -m 644 %{buildroot}/%_docdir/%{name}/neatx.conf.example %{buildroot}/etc/neatx.conf
+%__install -D -m 755 extras/rpm/neatx.initscript %{buildroot}/etc/init.d/neatx
 
 %clean
 rm -rf %{buildroot}
@@ -80,10 +81,13 @@ if [ $1 -eq 1 ]; then
     %__install -d -m 700 -o nx -g nx %nx_homedir/.ssh/
     %__install -D -m 600 -o nx -g nx %_datadir/%{name}/authorized_keys.nomachine %nx_homedir/.ssh/authorized_keys
 fi
+/sbin/chkconfig --add neatx
+/sbin/service neatx start > /dev/null 2>&1
 
 %files
 %defattr(-,root,root)
 %config(noreplace) /etc/neatx.conf
+/etc/init.d/neatx
 %_libdir/%{name}
 %python_sitelib/%{name}/*
 %doc %_docdir/%{name}

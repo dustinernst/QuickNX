@@ -1,0 +1,26 @@
+#!/bin/bash
+#
+# Copied from freenx-server fedora package
+#
+# chkconfig: 2345 91 35
+# description: Creates /tmp/.X11-unix/ if required
+
+start() {
+  install -d -o root -g root -m 1777 "/tmp/.X11-unix"
+  restorecon /tmp/.X11-unix 2>/dev/null || :
+}
+
+case "$1" in
+  start)
+        start
+        ;;
+  stop)
+        :
+        ;;
+  restart)
+        :
+        ;;
+  *)
+        echo $"Usage: $prog {start}"
+        exit 1
+esac
