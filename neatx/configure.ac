@@ -30,7 +30,8 @@ AM_PATH_PYTHON(2.4)
 
 # Check for rst2html
 AC_ARG_VAR(RST2HTML, [rst2html path])
-AC_PATH_PROG(RST2HTML, [rst2html], [])
+AC_PATH_PROGS(RST2HTML, [rst2html rst2html.py], [])
+
 if test -z "$RST2HTML"
 then
   AC_MSG_WARN([rst2html not found, documentation rebuild will not be possible])

@@ -146,7 +146,8 @@ $(TESTS): neatx srclinks lib/_autoconf.py src/fdcopy src/ttysetup
 
 doc/%.html: doc/%.rst
 	@if test -z "$(RST2HTML)"; then \
-		echo 'rst2html not found during configure, not building docs'; \
+		echo "rst2html not found during configure, can't build docs"; \
+		exit 1; \
 	else \
 		$(RST2HTML) $< $@; \
 	fi
