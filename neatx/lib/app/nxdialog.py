@@ -163,15 +163,13 @@ def HandleSessionAction(agentpid, action):
 
   """
   if action == DISCONNECT:
-    ppid = os.getppid()
     logging.info("Disconnecting from session, sending SIGHUP to %s", ppid)
-    os.kill(ppid, signal.SIGHUP)
+    os.kill(agentpid, signal.SIGHUP)
 
   elif action == TERMINATE:
-    if agentpid:
-      logging.info("Terminating session, sending SIGTERM to process %s",
-                   agentpid)
-      os.kill(agentpid, signal.SIGTERM)
+    logging.info("Terminating session, sending SIGTERM to process %s",
+                 agentpid)
+    os.kill(agentpid, signal.SIGTERM)
 
   elif action is None:
     logging.debug("Dialog canceled, nothing to do")
@@ -221,6 +219,11 @@ class NxDialogProgram(cli.GenericProgram):
 
     if dlgtype not in constants.VALID_DLG_TYPES:
       logging.error("Dialog type '%s' not supported", dlgtype)
+      sys.exit(constants.EXIT_FAILURE)
+
+    if dlgtype in (constants.DLG_TYPE_PULLDOWN,
+        constants.DLG_TYPE_YESNOSUSPEND) and not self.option.agentpid:
+      logging.error("Agent pid not supplied via --parent")
       sys.exit(constants.EXIT_FAILURE)
 
     if self.options.caption:
