@@ -1,0 +1,92 @@
+Software Requirements
+=====================
+
+Before installing, please verify that you have the following programs
+installed:
+  - OpenSSH
+    http://www.openssh.com/portable.html
+  - Python 2.4 (or a higher 2.x version)
+    http://www.python.org/
+  - Pexpect
+    http://sourceforge.net/projects/pexpect
+  - simplejson Python module
+    http://www.undefined.org/python/#simplejson
+  - PyGTK+ 2.10 or higher
+    http://www.pygtk.org/
+  - PyGObject 2.14 or higher
+    http://www.pygtk.org/
+  - GNU C Compiler
+    http://gcc.gnu.org/
+  - GNU Autoconf
+    http://www.gnu.org/software/autoconf/
+  - GNU Automake
+    http://www.gnu.org/software/automake/
+  - GNU Make
+    http://www.gnu.org/software/make/
+  - Python Docutils
+    http://sourceforge.net/projects/docutils
+  - NX Agent 3.3.0
+    http://www.nomachine.com/sources
+  - Netcat
+    http://sourceforge.net/projects/netcat
+  - NXClient (or equivalent, only NoMachine's client has been tested though)
+    http://www.nomachine.com/select-package-client.php
+  - Xauth & Xrdb
+    http://xorg.freedesktop.org/releases/individual/app/
+
+
+Debian/Ubuntu installation
+==========================
+
+On debian/ubuntu, these requirements (except NX Agent) can be satisfied using:
+  sudo apt-get install make openssh-server python python-pexpect \
+       python-simplejson python-gtk2 python-gobject gcc autoconf automake \
+       python-docutils netcat xauth x11-xserver-utils
+
+Nx Agent is not currently included in debian or ubuntu. Ubuntu packages can be
+located here:
+  https://launchpad.net/~freenx-team/+archive/ppa
+
+
+Redhat/Fedora/Rpm-based distros
+===============================
+
+To build a .rpm package, run these commands (the ones prefixed with # should be
+run as root). Replace names in <>'s appropriately.
+
+# yum install yum-utils rpmdevtools
+$ rpmdev-setuptree
+$ cd /path/to/neatx/tree
+$ tar czf ~/rpmbuild/SOURCES/neatx-0.1.tar.gz *
+$ rpmbuild -bs extras/rpm/neatx.spec --nodeps
+# yum-builddep ~<user>/rpmbuild/SRPMS/neatx-*.src.rpm
+$ rpmbuild -bb extras/rpm/neatx.spec
+# yum install --nogpgcheck ~<user>/rpmbuild/RPMS/<platform>/<rpmname>
+
+Then customise /etc/neatx.conf as below.
+
+
+Building/installing from source
+====================
+
+To build, run the following as a normal user:
+  - ./autogen.sh
+  - ./configure # You probably want to supply --prefix etc here. see
+                # ./configure --help for details.
+  - make
+
+To install, run this as root:
+  - make install
+
+To finish setup (this assumes you've installed to the standard locations):
+  - Create a 'nx' user with the shell set to the path to
+    /usr/local/lib/neatx/nxserver-login-wrapper
+    Debian/ubuntu example:
+      useradd --system -m -d /usr/local/var/lib/neatx/home -s \
+      /usr/local/lib/neatx/nxserver-login-wrapper nx
+  - Install authorized_keys.nomachine:
+    install -D -m 600 -o nx /usr/local/share/neatx/authorized_keys.nomachine ~nx/.ssh/authorized_keys
+  - Install the example config file:
+    cp /usr/local/share/doc/neatx/neatx.conf.example /usr/local/etc/neatx.conf
+  - Edit neatx.conf to configure command paths that might be different on your
+    system (e.g. netcat-path on fedora)
