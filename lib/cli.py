@@ -26,9 +26,9 @@ import logging
 import optparse
 import sys
 
-from neatx import config
-from neatx import constants
-from neatx import utils
+from quicknx import config
+from quicknx import constants
+from quicknx import utils
 
 
 class GenericProgram(object):

@@ -35,14 +35,14 @@ import sys
 
 from io import StringIO
 
-from neatx import agent
-from neatx import constants
-from neatx import daemon
-from neatx import errors
-from neatx import protocol
-from neatx import serializer
-from neatx import session
-from neatx import utils
+from quicknx import agent
+from quicknx import constants
+from quicknx import daemon
+from quicknx import errors
+from quicknx import protocol
+from quicknx import serializer
+from quicknx import session
+from quicknx import utils
 
 
 REQ_FIELD_CMD = "cmd"

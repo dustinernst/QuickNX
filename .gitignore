@@ -26,7 +26,7 @@
 /configure
 /stamp-directories
 /stamp-h1
-/neatx
+/quicknx
 /*.patch
 /*.tar.bz2
 /*.tar.gz

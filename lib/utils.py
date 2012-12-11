@@ -38,8 +38,8 @@ import tempfile
 import termios
 import time
 
-from neatx import constants
-from neatx import errors
+from quicknx import constants
+from quicknx import errors
 import collections
 
 

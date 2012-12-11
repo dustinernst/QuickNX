@@ -28,9 +28,9 @@ import pexpect
 import re
 from io import StringIO
 
-from neatx import constants
-from neatx import errors
-from neatx import utils
+from quicknx import constants
+from quicknx import errors
+from quicknx import utils
 
 
 class _AuthBase(object):

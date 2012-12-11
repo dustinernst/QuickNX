@@ -28,7 +28,7 @@ import logging
 import re
 import urllib.request, urllib.parse, urllib.error
 
-from neatx import utils
+from quicknx import utils
 import collections
 
 

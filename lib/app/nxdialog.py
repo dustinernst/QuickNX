@@ -35,10 +35,10 @@ import os
 import signal
 import sys
 
-from neatx import cli
-from neatx import constants
-from neatx import errors
-from neatx import utils
+from quicknx import cli
+from quicknx import constants
+from quicknx import errors
+from quicknx import utils
 
 
 PROGRAM = "nxdialog"
@@ -75,7 +75,7 @@ class PullDownMenu:
     menu.connect("deactivate", self._MenuDeactivate)
 
     # TODO: Show title item in bold font
-    title = gtk.MenuItem(label="Neatx session")
+    title = gtk.MenuItem(label="QuickNX session")
     title.set_sensitive(False)
     menu.append(title)
 

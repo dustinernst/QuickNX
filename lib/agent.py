@@ -35,11 +35,11 @@ import subprocess
 
 from io import StringIO
 
-from neatx import constants
-from neatx import daemon
-from neatx import errors
-from neatx import protocol
-from neatx import utils
+from quicknx import constants
+from quicknx import daemon
+from quicknx import errors
+from quicknx import protocol
+from quicknx import utils
 
 
 _STATUS_MAP = {
@@ -545,7 +545,7 @@ class NxAgentProgram(daemon.Program):
       "keyboard": sess.keyboard,
       "link": sess.link,
       # TODO: What is this used for in nxagent?
-      "product": "Neatx-%s" % constants.DEFAULT_SUBSCRIPTION,
+      "product": "QuickNX-%s" % constants.DEFAULT_SUBSCRIPTION,
       "render": "1",
       "resize": protocol.FormatNxBoolean(sess.resize),
       "shmem": "1",

@@ -30,13 +30,13 @@ import socket
 import subprocess
 import sys
 
-from neatx import cli
-from neatx import constants
-from neatx import errors
-from neatx import node
-from neatx import protocol
-from neatx import session
-from neatx import utils
+from quicknx import cli
+from quicknx import constants
+from quicknx import errors
+from quicknx import node
+from quicknx import protocol
+from quicknx import session
+from quicknx import utils
 
 
 PROGRAM = "nxserver"

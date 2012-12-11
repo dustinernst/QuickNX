@@ -35,10 +35,10 @@ try:
 except ImportError:
   import md5
 
-from neatx import constants
-from neatx import serializer
-from neatx import errors
-from neatx import utils
+from quicknx import constants
+from quicknx import serializer
+from quicknx import errors
+from quicknx import utils
 
 
 def NewUniqueId(_data=None):
@@ -136,7 +136,7 @@ class SessionBase(object):
     return "%s-%s-%s" % (self.hostname, self.display, self.id)
 
   def _GetWindowName(self):
-    return ("Neatx - %s@%s:%s - %s" %
+    return ("QuickNX - %s@%s:%s - %s" %
             (self.username, self.hostname, self.display, self.name))
 
   # Read-only attributes

@@ -35,14 +35,14 @@ import socket
 import sys
 import gobject
 
-from neatx import cli
-from neatx import constants
-from neatx import daemon
-from neatx import errors
-from neatx import node
-from neatx import serializer
-from neatx import session
-from neatx import utils
+from quicknx import cli
+from quicknx import constants
+from quicknx import daemon
+from quicknx import errors
+from quicknx import node
+from quicknx import serializer
+from quicknx import session
+from quicknx import utils
 
 
 PROGRAM = "nxnode"

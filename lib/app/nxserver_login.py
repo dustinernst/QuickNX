@@ -29,12 +29,12 @@ import os.path
 import re
 import sys
 
-from neatx import auth
-from neatx import cli
-from neatx import constants
-from neatx import errors
-from neatx import protocol
-from neatx import utils
+from quicknx import auth
+from quicknx import cli
+from quicknx import constants
+from quicknx import errors
+from quicknx import protocol
+from quicknx import utils
 
 
 PROGRAM = "nxserver-login"

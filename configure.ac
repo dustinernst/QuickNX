@@ -1,4 +1,4 @@
-# Configure script for Neatx
+# Configure script for QuickNX
 m4_define([version_major], [0])
 m4_define([version_minor], [3])
 m4_define([version_revision], [1])
@@ -9,7 +9,7 @@ m4_define([version_full],
                     version_revision, version_suffix))
 
 AC_PREREQ(2.59)
-AC_INIT(neatx, version_full, neatx@googlegroups.com)
+AC_INIT(quicknx, version_full, dustinernst@gmail.com)
 AC_CONFIG_AUX_DIR(autotools)
 AC_CONFIG_SRCDIR(configure)
 AM_INIT_AUTOMAKE([1.9 foreign tar-ustar -Wall -Wno-portability])
@@ -26,7 +26,7 @@ AC_PROG_LN_S
 AC_PROG_CC
 
 # Check for Python
-AM_PATH_PYTHON(2.4)
+AM_PATH_PYTHON(3.2)
 
 # Check for rst2html
 AC_ARG_VAR(RST2HTML, [rst2html path])

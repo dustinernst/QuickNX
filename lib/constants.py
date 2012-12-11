@@ -22,7 +22,7 @@
 """Module for constants"""
 
 
-from neatx import _autoconf
+from quicknx import _autoconf
 
 
 SYSLOG_ADDRESS = "/dev/log"
@@ -53,11 +53,11 @@ NXAGENT_VERSION_SEP = ".-~"
 
 PROTOCOL_VERSION_DIGITS = [2, 2, 4]
 
-CONFIG_FILE = _autoconf.SYSCONFDIR + "/neatx.conf"
+CONFIG_FILE = _autoconf.SYSCONFDIR + "/quicknx.conf"
 
-DATA_DIR = _autoconf.LOCALSTATEDIR + "/lib/neatx"
+DATA_DIR = _autoconf.LOCALSTATEDIR + "/lib/quicknx"
 SESSIONS_DIR = DATA_DIR + "/sessions"
-SESSION_DATA_FILE_NAME = "neatx.data"
+SESSION_DATA_FILE_NAME = "quicknx.data"
 
 NODE_SOCKET_NAME = "nxnode.sock"
 

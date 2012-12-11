@@ -26,8 +26,8 @@ import configparser
 import os
 import socket
 
-from neatx import constants
-from neatx import utils
+from quicknx import constants
+from quicknx import utils
 
 
 VAR_AUTH_METHOD = "auth-method"
