@@ -26,7 +26,7 @@ import logging
 import os
 import pexpect
 import re
-from cStringIO import StringIO
+from io import StringIO
 
 from neatx import constants
 from neatx import errors
@@ -55,7 +55,7 @@ class _ExpectAuthBase(_AuthBase):
     # Avoid NLS issues by unsetting LC_*, and setting LANG=C
     env = os.environ.copy()
     env["LANG"] = "C"
-    for key in env.keys():
+    for key in list(env.keys()):
       if key.startswith('LC_'):
         del env[key]
 
@@ -116,7 +116,7 @@ class _ExpectAuthBase(_AuthBase):
                                     child.exitstatus, child.signalstatus))
 
     # Write protocol buffer contents to stdout
-    os.write(self._stdout_fileno, nxbuf.getvalue())
+    os.write(self._stdout_fileno, bytes(nxbuf.getvalue(),'UTF-8'))
 
     utils.SetCloseOnExecFlag(child.fileno(), False)
     utils.SetCloseOnExecFlag(self._stdin_fileno, False)

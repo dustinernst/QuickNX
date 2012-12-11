@@ -26,9 +26,10 @@
 
 import logging
 import re
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 from neatx import utils
+import collections
 
 
 NX_PROMPT = "NX>"
@@ -122,7 +123,7 @@ class NxServerBase(object):
     @param handler: Called for received lines
 
     """
-    assert callable(handler)
+    assert isinstance(handler, collections.Callable)
 
     self._input = input
     self._output = output
@@ -144,7 +145,7 @@ class NxServerBase(object):
           if line.strip():
             self._HandleLine(line)
 
-        except NxProtocolError, err:
+        except NxProtocolError as err:
           self.Write(err.code, message=err.msg)
           if err.fatal:
             raise NxQuitServer()
@@ -301,7 +302,7 @@ def UnquoteParameterValue(value):
   @return: Unquoted value
 
   """
-  return urllib.unquote(value)
+  return urllib.parse.unquote(value)
 
 
 def ParseNxBoolean(value):

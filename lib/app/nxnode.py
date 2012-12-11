@@ -221,11 +221,11 @@ class ClientConnection:
     except (SystemExit, KeyboardInterrupt):
       raise
 
-    except errors.GenericError, err:
+    except errors.GenericError as err:
       # Serialize exception arguments
       result = (err.__class__.__name__, err.args)
 
-    except Exception, err:
+    except Exception as err:
       logging.exception("Error while handling request")
       result = "Caught exception: %s" % str(err)
 

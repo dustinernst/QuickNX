@@ -70,14 +70,14 @@ app_PYTHON = \
 	lib/app/nxserver.py \
 	lib/app/nxserver_login.py
 
-dist_pkglib_SCRIPTS = \
+dist_pkglibexec_SCRIPTS = \
 	src/ttysetup
 
-nodist_pkglib_SCRIPTS = \
+nodist_pkglibexec_SCRIPTS = \
 	$(LOG_WRAPPER) \
 	$(PYTHON_BOOTSTRAP)
 
-pkglib_PROGRAMS = \
+pkglibexec_PROGRAMS = \
 	src/fdcopy
 
 dist_pkgdata_DATA = \

@@ -33,7 +33,7 @@ import random
 import socket
 import sys
 
-from cStringIO import StringIO
+from io import StringIO
 
 from neatx import agent
 from neatx import constants
@@ -88,7 +88,7 @@ def FindUnusedDisplay(_pool=None, _check_paths=None):
     # TODO: Find a better way to reserve display numbers in an atomic way.
     # FIXME: Potential DoS: any user could create all checked paths and thereby
     # lock other users out.
-    _pool = random.sample(xrange(20, 1000), 10)
+    _pool = random.sample(list(range(20, 1000)), 10)
 
   if _check_paths is None:
     _check_paths = constants.DISPLAY_CHECK_PATHS
@@ -279,13 +279,11 @@ class SessionRunner(object):
     sess = self.__ctx.session
 
     cookies = []
-    cookies.extend(map(lambda display: (display, sess.cookie),
-                       self.__GetHostDisplays(sess.display)))
+    cookies.extend([(display, sess.cookie) for display in self.__GetHostDisplays(sess.display)])
 
     if sess.shadow_cookie:
       # Add special shadow cookie
-      cookies.extend(map(lambda display: (display, sess.shadow_cookie),
-                         self.__GetHostDisplays(sess.shadow_display)))
+      cookies.extend([(display, sess.shadow_cookie) for display in self.__GetHostDisplays(sess.shadow_display)])
 
     logging.info("Starting xauth for %r", cookies)
     xauth = agent.XAuthProgram(sess.GetSessionEnvVars(), sess.authorityfile,
@@ -491,9 +489,9 @@ class NodeClient(object):
 
     try:
       sock.connect(self._address)
-    except socket.timeout, err:
+    except socket.timeout as err:
       raise errors.GenericError("Connection timed out: %s" % str(err))
-    except socket.error, err:
+    except socket.error as err:
       if retry and err.args[0] in (errno.ENOENT, errno.ECONNREFUSED):
         # Try again
         raise utils.RetryAgain()

@@ -22,7 +22,7 @@
 """Module for config functions"""
 
 
-import ConfigParser
+import configparser
 import os
 import socket
 
@@ -54,7 +54,7 @@ _GLOBAL_SECTION = "global"
 
 
 def _ReadConfig(filename):
-  cfg = ConfigParser.RawConfigParser()
+  cfg = configparser.RawConfigParser()
   cfg.read(filename)
   return cfg
 
@@ -65,9 +65,9 @@ def __GetDefault(func):
     return default
   return wrapped
 
-_GetOption = __GetDefault(ConfigParser.RawConfigParser.get)
-_GetBoolOption = __GetDefault(ConfigParser.RawConfigParser.getboolean)
-_GetIntOption = __GetDefault(ConfigParser.RawConfigParser.getint)
+_GetOption = __GetDefault(configparser.RawConfigParser.get)
+_GetBoolOption = __GetDefault(configparser.RawConfigParser.getboolean)
+_GetIntOption = __GetDefault(configparser.RawConfigParser.getint)
 
 
 def _GetSshPort():

@@ -32,7 +32,7 @@ import os
 import re
 import signal
 
-from cStringIO import StringIO
+from io import StringIO
 
 from neatx import constants
 from neatx import daemon
@@ -119,7 +119,7 @@ class UserApplication(daemon.Program):
 
     try:
       contents = open(dmrc_path).read()
-    except IOError, err:
+    except IOError as err:
       logging.warning("Error reading %r: %r", dmrc_path, err.strerror)
       return
 
@@ -316,7 +316,7 @@ class NxAgentProgram(daemon.Program):
     logging.info("Sending %s to nxagent", signame)
     try:
       os.kill(self._agent_pid, signum)
-    except OSError, err:
+    except OSError as err:
       # kill(2) on ESRCH: The pid or process group does not exist. Note that
       # an existing process might be a zombie, a process which already
       # committed termination, but has not yet been wait(2)ed for.
@@ -363,7 +363,7 @@ class NxAgentProgram(daemon.Program):
         # terminate.
         try:
           os.kill(self._watchdog_pid, signal.SIGTERM)
-        except OSError, err:
+        except OSError as err:
           logging.warning(("Matched info kill_watchdog, got error from "
                            "killing PID %r: %r"), self._watchdog_pid, err)
         else:
@@ -402,7 +402,7 @@ class NxAgentProgram(daemon.Program):
     if _status_map is None:
       _status_map = _STATUS_MAP
 
-    for status, rx in _status_map.iteritems():
+    for status, rx in list(_status_map.items()):
       m = rx.match(line)
       if m:
         logging.info("Nxagent changed status from %r to %r",
@@ -493,7 +493,7 @@ class NxAgentProgram(daemon.Program):
     sess = self._ctx.session
 
     formatted = ",".join(["%s=%s" % (name, value)
-                          for name, value in opts.iteritems()])
+                          for name, value in list(opts.items())])
 
     return "nx/nx,%s:%d\n" % (formatted, sess.display)
 
@@ -625,7 +625,7 @@ class NxAgentProgram(daemon.Program):
     formatted = self._FormatNxAgentOptions(opts)
 
     logging.debug("Writing session options %r to %s", formatted, filename)
-    utils.WriteFile(filename, data=formatted, mode=0600)
+    utils.WriteFile(filename, data=formatted, mode=0o600)
 
   def __EmitDisplayReady(self):
     self.emit(self.DISPLAY_READY_SIGNAL)
@@ -638,7 +638,7 @@ class NxAgentProgram(daemon.Program):
 
     """
 
-    for name, value in opts.iteritems():
+    for name, value in list(opts.items()):
       self.__CheckStrChars(name, "Name of option %r" % name)
       self.__CheckStrChars(value, "Value of option %r (%r)" % (name, value))
 

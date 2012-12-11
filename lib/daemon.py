@@ -466,7 +466,7 @@ class Program(gobject.GObject, object):
 
     """
     # gobject.spawn_async needs this list to be a plain string, not unicode
-    return [str("%s=%s" % (key, value)) for (key, value) in env.iteritems()]
+    return [str("%s=%s" % (key, value)) for (key, value) in env.items()]
 
   @staticmethod
   def __FormatArgs(args):
@@ -474,7 +474,7 @@ class Program(gobject.GObject, object):
 
     """
     # gobject.spawn_async needs this list to be a plain string, not unicode
-    return map(str, args)
+    return list(map(str, args))
 
   def __ChildSetup(self):
     """Called in child process just before the actual program is executed.

@@ -40,6 +40,7 @@ import time
 
 from neatx import constants
 from neatx import errors
+import collections
 
 
 _SHELL_UNQUOTED_RE = re.compile('^[-.,=:/_+@A-Za-z0-9]+$')
@@ -264,12 +265,12 @@ def WithoutTerminalEcho(fd, fn, *args, **kwargs):
   @param fn: Called function
 
   """
-  assert callable(fn)
+  assert isinstance(fn, collections.Callable)
 
   # Keep old terminal settings
   try:
     old = termios.tcgetattr(fd)
-  except termios.error, err:
+  except termios.error as err:
     if err.args[0] not in (errno.ENOTTY, errno.EINVAL):
       raise
     old = None
@@ -310,7 +311,7 @@ def RemoveFile(filename):
   """
   try:
     os.unlink(filename)
-  except OSError, err:
+  except OSError as err:
     if err.errno not in (errno.ENOENT, errno.EISDIR):
       raise
 
@@ -414,7 +415,7 @@ def WriteFile(file_name, fn=None, data=None,
     if mode:
       os.chmod(new_name, mode)
     if data is not None:
-      os.write(fd, data)
+      os.write(fd, bytes(data,'UTF-8'))
     else:
       fn(fd)
     os.fsync(fd)
@@ -590,7 +591,7 @@ def CloseFd(fd, retries=5):
     retries -= 1
     try:
       os.close(fd)
-    except OSError, err:
+    except OSError as err:
       if err.errno != errno.EBADF:
         continue
     break
@@ -650,10 +651,10 @@ def StartDaemon(fn):
 
   # Second child process
   os.chdir("/")
-  os.umask(077)
+  os.umask(0o77)
 
   # Close all file descriptors
-  for fd in xrange(GetMaxFd()):
+  for fd in range(GetMaxFd()):
     CloseFd(fd)
 
   # Open /dev/null
@@ -677,7 +678,7 @@ def StartDaemon(fn):
 def CallWithSignalHandlers(sigtbl, fn, *args, **kwargs):
   previous = {}
   try:
-    for (signum, handler) in sigtbl.iteritems():
+    for (signum, handler) in list(sigtbl.items()):
       # Setup handler
       prev_handler = signal.signal(signum, handler)
       try:
@@ -690,7 +691,7 @@ def CallWithSignalHandlers(sigtbl, fn, *args, **kwargs):
     return fn(*args, **kwargs)
 
   finally:
-    for (signum, prev_handler) in previous.items():
+    for (signum, prev_handler) in list(previous.items()):
       signal.signal(signum, prev_handler)
 
       # If successful, remove from dict
@@ -705,7 +706,7 @@ def _GetSignalNumberTable(_signal=signal):
   for name in dir(_signal):
     if name.startswith("SIG") and not name.startswith("SIG_"):
       signum = getattr(_signal, name)
-      if isinstance(signum, (int, long)):
+      if isinstance(signum, int):
         table[signum] = name
 
   return table
@@ -781,9 +782,9 @@ def GetVersionComparator(sep, count=-1):
   # TODO: Support for versions such as "1.2~alpha0"
 
   split_fn = _GetVersionSplitter(sep, count)
-  split_version = lambda ver: map(_ConvertVersionPart, split_fn(ver))
+  split_version = lambda ver: list(map(_ConvertVersionPart, split_fn(ver)))
 
-  return lambda x, y: cmp(split_version(x), split_version(y))
+  return lambda x, y: ((split_version(x) > split_version(y)) - (split_version(x) < split_version(y)))
 
 
 def ParseVersion(version, sep, digits):

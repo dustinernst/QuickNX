@@ -21,20 +21,20 @@
 
 """Serializer abstraction module
 
-This module introduces a simple abstraction over a serialization
+This module introduces a  abstraction over a serialization
 backend (currently JSON).
 
 """
 
 
-import simplejson
+import json
 import re
 
 
-# Check whether the simplejson module supports indentation
+# Check whether the json module supports indentation
 _JSON_INDENT = 2
 try:
-  simplejson.dumps(1, indent=_JSON_INDENT)
+  json.dumps(1, indent=_JSON_INDENT)
 except TypeError:
   _JSON_INDENT = None
 
@@ -45,15 +45,15 @@ def DumpJson(data, indent=True):
   """Serialize a given object.
 
   @param data: the data to serialize
-  @param indent: whether to indent output (depends on simplejson version)
+  @param indent: whether to indent output (depends on json version)
 
   @return: the string representation of data
 
   """
   if not indent or _JSON_INDENT is None:
-    txt = simplejson.dumps(data)
+    txt = json.dumps(data)
   else:
-    txt = simplejson.dumps(data, indent=_JSON_INDENT)
+    txt = json.dumps(data, indent=_JSON_INDENT)
 
   txt = _RE_EOLSP.sub("", txt)
 
@@ -71,4 +71,4 @@ def LoadJson(txt):
   @return: the original data
 
   """
-  return simplejson.loads(txt)
+  return json.loads(txt)

@@ -50,7 +50,7 @@ def NewUniqueId(_data=None):
   """
   if _data is None:
     _data = random.SystemRandom().getrandbits(1024)
-  return md5.md5(str(_data)).hexdigest().upper()
+  return md5.md5(str(_data).encode('utf-8')).hexdigest().upper()
 
 
 class SessionBase(object):
@@ -121,7 +121,7 @@ class SessionBase(object):
       # more details.
       return None
 
-    raise AttributeError, name
+    raise AttributeError(name)
 
   def __setattr__(self, name, value):
     if name == "state" and value not in constants.VALID_SESS_STATES:
@@ -176,7 +176,7 @@ class NxSession(SessionBase):
       if name not in state:
         delattr(obj, name)
 
-    for name, value in state.iteritems():
+    for name, value in list(state.items()):
       if name in obj.__slots__:
         setattr(obj, name, value)
 
@@ -249,7 +249,7 @@ class NxSessionManager(object):
 
     try:
       fd = open(filename, "r")
-    except IOError, err:
+    except IOError as err:
       # Files can disappear
       if err.errno in (errno.ENOENT, errno.EACCES):
         return None
@@ -306,8 +306,8 @@ class NxSessionManager(object):
       tries += 1
 
       try:
-        os.mkdir(path, 0700)
-      except OSError, err:
+        os.mkdir(path, 0o700)
+      except OSError as err:
         if err.errno != errno.EEXIST:
           raise
 
