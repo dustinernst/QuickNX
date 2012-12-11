@@ -116,7 +116,7 @@ class _ExpectAuthBase(_AuthBase):
                                     child.exitstatus, child.signalstatus))
 
     # Write protocol buffer contents to stdout
-    os.write(self._stdout_fileno, bytes(nxbuf.getvalue(),'UTF-8'))
+    os.write(self._stdout_fileno, bytes(nxbuf.getvalue(), 'UTF-8'))
 
     utils.SetCloseOnExecFlag(child.fileno(), False)
     utils.SetCloseOnExecFlag(self._stdin_fileno, False)

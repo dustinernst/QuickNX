@@ -363,8 +363,7 @@ def ListVisibleFiles(path):
   @return: the list of all files not starting with a dot
 
   """
-  files = [i for i in os.listdir(path) if not i.startswith(".")]
-  files.sort()
+  files = sorted([i for i in os.listdir(path) if not i.startswith(".")])
   return files
 
 
@@ -415,7 +414,7 @@ def WriteFile(file_name, fn=None, data=None,
     if mode:
       os.chmod(new_name, mode)
     if data is not None:
-      os.write(fd, bytes(data,'UTF-8'))
+      os.write(fd, bytes(data, 'UTF-8'))
     else:
       fn(fd)
     os.fsync(fd)
@@ -651,7 +650,7 @@ def StartDaemon(fn):
 
   # Second child process
   os.chdir("/")
-  os.umask(0o77)
+  os.umask(0o000)
 
   # Close all file descriptors
   for fd in range(GetMaxFd()):

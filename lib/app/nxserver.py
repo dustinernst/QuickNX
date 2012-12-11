@@ -208,7 +208,7 @@ class ServerCommandHandler(object):
       elif cmd == protocol.NX_CMD_RESTORESESSION:
         return self._RestoreSession(args)
 
-    except errors.SessionParameterError as err:
+    except errors.SessionParameterError, err:
       logging.exception("Session parameter error")
       raise protocol.NxProtocolError(500, err.args[0], fatal=True)
 

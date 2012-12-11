@@ -27,17 +27,17 @@ from neatx import _autoconf
 
 SYSLOG_ADDRESS = "/dev/log"
 BASH = "/bin/bash"
-NETCAT = "/bin/netcat"
+NETCAT = "/usr/bin/netcat"
 XRDB = "/usr/bin/xrdb"
 SU = "/bin/su"
 SSH = "/usr/bin/ssh"
 XAUTH = "/usr/bin/xauth"
-XSESSION = "/etc/X11/Xsession"
+XSESSION = "/etc/X11/xdm/Xsession"
 NXAGENT = "/usr/bin/nxagent"
 
 START_CONSOLE_COMMAND = "/usr/bin/xterm"
 START_KDE_COMMAND = "startkde"
-START_GNOME_COMMAND = "gnome-session"
+START_GNOME_COMMAND = "/usr/bin/gnome-session"
 
 NXUSER = "nx"
 NXSERVER = _autoconf.PKGLIBDIR + "/nxserver"
@@ -70,7 +70,7 @@ USE_XSESSION = True
 
 DEFAULT_SUBSCRIPTION = "GPL"
 DEFAULT_SSH_PORT = 22
-DEFAULT_APP_UMASK = 0o077
+DEFAULT_APP_UMASK = 0o000
 DEFAULT_NX_PROTOCOL_VERSION = "3.3.0"
 
 # Taken from nxcomp/Misc.cpp
@@ -85,7 +85,7 @@ STDERR_FILENO = 2
 
 AUTH_METHOD_SU = "su"
 AUTH_METHOD_SSH = "ssh"
-AUTH_METHOD_DEFAULT = AUTH_METHOD_SU
+AUTH_METHOD_DEFAULT = AUTH_METHOD_SSH
 
 SESS_STATE_CREATED = "created"
 SESS_STATE_STARTING = "starting"

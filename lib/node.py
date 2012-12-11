@@ -58,7 +58,7 @@ CMD_TERMINATESESSION = "terminate"
 
 CMD_GET_SHADOW_COOKIE = "getshadowcookie"
 
-PROTO_SEPARATOR = "\0"
+PROTO_SEPARATOR = "\x00"
 
 
 def GetHostname():
@@ -290,6 +290,7 @@ class SessionRunner(object):
                                cookies, self.__ctx.cfg)
     xauth.connect(agent.XAuthProgram.EXITED_SIGNAL, self.__XAuthDone)
     xauth.Start()
+    logging.debug("Xauth started")
 
   def Restore(self):
     if not self.__nxagent:
@@ -300,6 +301,7 @@ class SessionRunner(object):
     """Called when xauth exits.
 
     """
+    logging.debug("Xauth done")
     if exitstatus != 0 or signum is not None:
       self.__Quit()
       return
@@ -468,9 +470,9 @@ class NodeClient(object):
   calls.
 
   """
-  _RETRY_TIMEOUT = 10
-  _CONNECT_TIMEOUT = 10
-  _RW_TIMEOUT = 20
+  _RETRY_TIMEOUT = 10.0
+  _CONNECT_TIMEOUT = 10.0
+  _RW_TIMEOUT = 20.0
 
   def __init__(self, address):
     """Initializes this class.
@@ -497,7 +499,7 @@ class NodeClient(object):
         raise utils.RetryAgain()
 
       raise
-
+    logging.info("Setting socket timeout to: %f", self._RW_TIMEOUT)
     sock.settimeout(self._RW_TIMEOUT)
 
     return sock
@@ -549,9 +551,16 @@ class NodeClient(object):
     logging.debug("Sending request: %r", req)
 
     # TODO: sendall doesn't report errors properly
-    self._sock.sendall(serializer.DumpJson(req))
-    self._sock.sendall(PROTO_SEPARATOR)
 
+    req2 = serializer.DumpJson(req) + PROTO_SEPARATOR
+    
+    logging.debug("req2=%r",req2)
+    sent_len = 0
+    msg_len = len(req2)
+    while sent_len < msg_len:
+      sent_len = sent_len + self._sock.send(bytes(req2[sent_len:], "US-ASCII"))
+    #self._sock.send(bytes(PROTO_SEPARATOR, "US-ASCII"))
+    logging.debug("sent out %r of %r", sent_len, msg_len) 
     resp = serializer.LoadJson(self._ReadResponse())
     logging.debug("Received response: %r", resp)
 
@@ -587,15 +596,18 @@ class NodeClient(object):
 
     """
     # Read from socket while there are no messages in the buffer
+    timeout_tmp = self._sock.gettimeout()
+    self._sock.settimeout(None)
     while not self._inmsg:
-      data = self._sock.recv(4096)
+      data = str(self._sock.recv(4096), encoding="UTF-8")
+      logging.debug("GOT DATA1: %r", data)
       if not data:
         raise errors.GenericError("Connection closed while reading")
-
-      parts = (self._inbuf + data).split(PROTO_SEPARATOR)
+      logging.debug("GOT DATA2: %r", data)
+      parts = str(self._inbuf + data).split(PROTO_SEPARATOR)
       self._inbuf = parts.pop()
       self._inmsg.extend(parts)
-
+    self._sock.settimeout(timeout_tmp)
     return self._inmsg.popleft()
 
   def StartSession(self, args):

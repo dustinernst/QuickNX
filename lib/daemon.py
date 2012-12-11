@@ -80,7 +80,7 @@ class IOChannel(gobject.GObject, object):
     """
     object.__init__(self)
     gobject.GObject.__init__(self)
-
+    #logging.debug("Creating IO Channel: %r", self)
     self.__channel = None
     self.__handle = None
     self.__writebuf = ""
@@ -105,9 +105,10 @@ class IOChannel(gobject.GObject, object):
 
     """
     channel = gobject.IOChannel(fd)
-    channel.set_encoding(None)
-    channel.set_buffered(0)
     channel.set_flags(gobject.IO_FLAG_NONBLOCK)
+    #channel.set_encoding(None)
+    #channel.set_buffered(0)
+    channel.set_encoding("UTF-8")
     return channel
 
   def Attach(self, fd):
@@ -117,8 +118,10 @@ class IOChannel(gobject.GObject, object):
     @param fd: File descriptor
 
     """
+    #logging.debug("Attached fd %r to %r", fd, self)
     assert self.__channel is None
     self.__channel = self.__CreateChannel(fd)
+    self.__fd = fd
     self.__Update(False)
 
   def Detach(self):
@@ -137,6 +140,7 @@ class IOChannel(gobject.GObject, object):
     @param data: Data to be written
 
     """
+    #logging.debug("%r attempting async write or %r",self,data)
     self.__writebuf = self.__writebuf[self.__writepos:] + data
     self.__writepos = 0
     self.__Update(False)
@@ -167,23 +171,28 @@ class IOChannel(gobject.GObject, object):
 
     """
     cond = gobject.IO_IN | gobject.IO_HUP | gobject.IO_ERR | gobject.IO_NVAL
-
+    #logging.debug("calculating condition of %r", self)
     if self.__writebuf and self.__writepos < len(self.__writebuf):
+      #logging.debug("decided that %r needs IO_OUT", self)
       cond |= gobject.IO_OUT
-
+    #logging.debug("condition of %r is:%r", self, cond)
     return cond
 
   def __Read(self, channel):
     """Reads data from channel and emits events.
 
     """
+    #logging.debug("In __Read of %r", self)
     assert channel == self.__channel
-
+    #logging.debug("%r is reading", self)
     data = self.__channel.read(self.__BLOCKSIZE)
+    #if(data[-1] != "\x00"):
+      #data = data +"\x00"
     if data:
+      #logging.debug("%r read %r bytes, %r", self, len(data), data)
       self.__EmitAfterRead(data)
       return True
-
+    #logging.debug("%r read no data", self)
     # TODO: Correct when still writing?
     self.__Close()
     return False
@@ -192,18 +201,30 @@ class IOChannel(gobject.GObject, object):
     """Writes data from the buffer to the channel.
 
     """
+    #logging.debug("In __Write of %r", self)
     assert channel == self.__channel
-
+    #logging.debug("Passed assert for __Write of %r", self)
     endpos = self.__writepos + self.__BLOCKSIZE
 
     # Use slicing to avoid unnecessary memory reallocations
-    data = self.__writebuf[self.__writepos:endpos]
-
-    n = channel.write(data)
+    try:
+      data = str(self.__writebuf[self.__writepos:endpos], encoding="UTF-8")
+    except:
+      #logging.debug("excepted in %r for type %r",self, type(self.__writebuf))
+      pass
+    try:
+      data = str(bytes(self.__writebuf[self.__writepos:endpos], encoding="UTF-8"), encoding="UTF-8")
+    except:
+      #logging.debug("excepted in %r for type %r",self, type(self.__writebuf))
+      pass
+      
+    #logging.debug("%r is writing %r",self,data)
+    n = os.write(self.__fd, data.encode("UTF-8"))
+    #logging.debug("passed the write in %r", self)
     if n == 0:
       self.__Close()
       return False
-
+    #logging.debug("%r wrote %r bytes",self, n)
     self.__writepos += n
 
     assert self.__writepos <= len(self.__writebuf)
@@ -226,6 +247,7 @@ class IOChannel(gobject.GObject, object):
     assert channel == self.__channel
 
     if cond & (gobject.IO_IN | gobject.IO_OUT):
+      #logging.debug("Condition in __HandleIO passed for %r", self)
       return (((cond & gobject.IO_IN) and self.__Read(channel) or
               ((cond & gobject.IO_OUT) and self.__Write(channel))))
 
@@ -238,12 +260,14 @@ class IOChannel(gobject.GObject, object):
     """Closes the channel.
 
     """
+    #logging.debug("Closed %r", self)
     self.__channel.close(flush=True)
     self.__channel = None
     self.__Update(True)
     self.__EmitClosed()
 
   def __EmitAfterRead(self, data):
+    #logging.debug("In __EmitAfterRead for %r", self)
     self.emit(self.AFTER_READ_SIGNAL, data)
 
   def __EmitWriteComplete(self):
@@ -273,9 +297,9 @@ class ChopReader(gobject.GObject):
     """Initializes this class.
 
     """
+    #logging.debug("Creating chop reader: %r", self)
     gobject.GObject.__init__(self)
     self.__sep = sep
-
     self.__channel = None
     self.__after_read_reg = None
     self.__closed_reg = None
@@ -324,9 +348,11 @@ class ChopReader(gobject.GObject):
     """Parses internal buffer until no more separators are found.
 
     """
+    #logging.debug("In __ParseBuffer of %r for %r", self, self.__buf)
     pos = 0
     try:
       while True:
+        #logging.debug("looking for %r in %r", self.__sep, self.__buf)
         idx = self.__buf.find(self.__sep, pos)
         if idx < 0:
           break
@@ -337,24 +363,27 @@ class ChopReader(gobject.GObject):
         self.__EmitSliceComplete(slice_)
     finally:
       self.__buf = self.__buf[pos:]
+    #logging.debug("Escaped __Parsebuffer of %r", self)
 
   def __ReceivedData(self, channel, data):
     """Adds received data to buffer.
 
     """
+    #logging.debug("In __ReceivedData of %r", self)
     assert channel == self.__channel
-
+    #logging.debug("Passed assert")
     if data:
-      self.__buf += data
-
+      self.__buf += str(data, encoding="UTF-8")
+    #logging.debug("Going to __ParseBuffer")
     self.__ParseBuffer()
+    #logging.debug("Leaving __ReceivedData of %r", self)
 
   def __Closed(self, channel):
     """Handles leftovers in buffer.
 
     """
     assert channel == self.__channel
-
+    #logging.debug("In closed of %r", self)
     self.__ParseBuffer()
 
     # Handle rest
@@ -445,7 +474,7 @@ class Program(gobject.GObject, object):
                          self.stderr_line.connect(ChopReader.SLICE_COMPLETE_SIGNAL,
                                                   self.__LogOutput, "stderr"))
     self.stderr_line.Attach(self.stderr)
-
+    #logging.debug("Program: %r, data: %r", self.__progname, stdin_data)
     if stdin_data:
       self.stdin.Write(stdin_data)
 
@@ -466,7 +495,7 @@ class Program(gobject.GObject, object):
 
     """
     # gobject.spawn_async needs this list to be a plain string, not unicode
-    return [str("%s=%s" % (key, value)) for (key, value) in env.items()]
+    return [str("%s=%s" % (key, value)) for (key, value) in list(env.items())]
 
   @staticmethod
   def __FormatArgs(args):
@@ -520,6 +549,7 @@ class Program(gobject.GObject, object):
     self.__pid = pid
 
     self.stdin.Attach(stdin_fd)
+    self.__stdin_fd = stdin_fd
     self.stdout.Attach(stdout_fd)
     self.stderr.Attach(stderr_fd)
 
@@ -549,6 +579,7 @@ class Program(gobject.GObject, object):
     """Called when I/O pipe to process is closed.
 
     """
+    #logging.debug("%r, closed pipe", self)
     pass
 
   def __CheckExit(self):

@@ -31,6 +31,7 @@ import logging
 import os
 import re
 import signal
+import subprocess
 
 from io import StringIO
 
@@ -153,9 +154,16 @@ class XAuthProgram(daemon.Program):
     @param cfg: Configuration object
 
     """
+    file = open(filename,"w")
+    file.write("")
+    file.close()
     args = [cfg.xauth, "-f", filename]
-    daemon.Program.__init__(self, args, env=env,
-                            stdin_data=self.__BuildInput(cookies))
+    logging.debug("args = %r", args)
+    #try:
+       #subprocess.check_call(args, timeout=30)
+    #except:
+       #pass
+    daemon.Program.__init__(self, args, env=env, stdin_data=self.__BuildInput(cookies))
 
   @classmethod
   def __BuildInput(cls, cookies):
@@ -165,14 +173,11 @@ class XAuthProgram(daemon.Program):
     @param cookies: Cookies as [(display, cookie), ...]
 
     """
-    buf = StringIO()
-
+    buf = ""
     for (display, cookie) in cookies:
-      buf.write("add %s %s %s\n" % (display, cls._MIT_MAGIC_COOKIE_1, cookie))
-
-    buf.write("exit\n")
-
-    return buf.getvalue()
+      buf = buf + ("add %s %s %s \n" % (display, cls._MIT_MAGIC_COOKIE_1, cookie))
+    buf = buf + "exit \n"
+    return buf
 
 
 class XRdbProgram(daemon.Program):
@@ -625,7 +630,7 @@ class NxAgentProgram(daemon.Program):
     formatted = self._FormatNxAgentOptions(opts)
 
     logging.debug("Writing session options %r to %s", formatted, filename)
-    utils.WriteFile(filename, data=formatted, mode=0o600)
+    utils.WriteFile(filename, data=formatted, mode=0o777)
 
   def __EmitDisplayReady(self):
     self.emit(self.DISPLAY_READY_SIGNAL)

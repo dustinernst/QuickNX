@@ -306,7 +306,7 @@ class NxSessionManager(object):
       tries += 1
 
       try:
-        os.mkdir(path, 0o700)
+        os.mkdir(path, 0o777)
       except OSError as err:
         if err.errno != errno.EEXIST:
           raise
